@@ -3,11 +3,12 @@
   "description": "describes properties required to create a user",
   "type": "object",
   "properties": {
-    "first": {
+    "firstname": {
       "type": "string",
+      "minLength": 8,
       "description": "firstname of the account user"
     },
-    "last": {
+    "lastname": {
       "type": "string",
       "description": "lastname of the account user"
     },
@@ -18,7 +19,12 @@
     "rememberEmail": {
       "type": "boolean",
       "description": "whether the users email address should be remembered"
+    },
+    "password": {
+      "type": "string",
+      "minLength": 8,
+      "description": "password of the account user"
     }
   },
-  "required": ["first", "last", "username", "rememberEmail"]
+  "required": ["first", "last", "username", "password"]
 }
