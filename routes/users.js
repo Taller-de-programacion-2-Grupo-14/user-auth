@@ -1,17 +1,15 @@
 var express = require('express');
 var router = express.Router();
 const {validateSchema} = require("../validators/middlewareValidator");
+const UserService = require("../services/user");
+const Users = require("../controllers/users");
 /* GET users listing. */
 router.get('/', function(req, res, next) {
   res.send('respond with a resource');
 });
-
-router.post('/', validateSchema('new-user'), (req, res, next) => {
-  let arr = JSON.parse(req.body)
-  console.log(req.body)
-  arr.forEach((v) => console.log(v))
-  return res.json(req.body)
-})
+userService = new UserService(null)
+usersContainer = new Users(userService)
+router.post('/', validateSchema('new-user'), (...args) => usersContainer.HandleUserPost(...args))
 
 
 module.exports = router;
