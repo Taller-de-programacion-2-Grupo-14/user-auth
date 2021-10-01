@@ -5,7 +5,6 @@
   "properties": {
     "firstname": {
       "type": "string",
-      "minLength": 8,
       "description": "firstname of the account user"
     },
     "lastname": {
@@ -26,5 +25,5 @@
       "description": "password of the account user"
     }
   },
-  "required": ["first", "last", "username", "password"]
+  "required": ["firstname", "lastname", "username", "password"]
 }

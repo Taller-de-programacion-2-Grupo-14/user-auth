@@ -8,12 +8,12 @@ ajv.addSchema(userSchema, 'new-user')
 /**
  * Format error responses
  * @param  {Object} schemaErrors - array of json-schema errors, describing each validation failure
- * @return {String} formatted api response
+ * @return {{errors: *, status: string}} formatted api response
  */
 function errorResponse(schemaErrors) {
     let errors = schemaErrors.map((error) => {
         return {
-            path: error.dataPath,
+            field: error.instancePath.replace("/", ""),
             message: error.message
         }
     })
