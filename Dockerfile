@@ -10,7 +10,6 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 RUN npm install --save --silent #Could be interesting to use npm ci
-RUN npm install react-scripts@latest -g --silent
 # If you are building your code for production
 # RUN npm ci --only=production
 

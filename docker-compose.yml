@@ -1,0 +1,25 @@
+version: '3'
+services:
+  db:
+    image: postgres
+    container_name: postgre
+    environment:
+      - <ENV_VAR>=<ENV_VALUE>
+    networks:
+      - <NETWORK>
+
+  <SERVICE_2>:
+    build: <DOCKERFILE_DIR>
+    container_name: <CONTAINER_NAME>
+    environment:
+      - <ENV_VAR>=<ENV_VALUE>
+    ports:
+      - 8080:8080
+    depends_on:
+      - <SERVICE_1>
+    networks:
+      - <NETWORK>
+
+networks:
+  <NETWORK>:
+    driver: <TYPE>
