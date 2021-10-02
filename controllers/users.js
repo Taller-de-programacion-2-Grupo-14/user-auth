@@ -8,8 +8,15 @@ class Users {
             password: req.body.password,
             email: req.body.email
         } //etc
-        this.service.AddUser(values)
+        try {
+            this.service.AddUser(values)
+        }
+        catch (e) {
+            res.status(503);
+            throw e;
+        }
         //Todo agregar servicio
+        res.status(200)
         return res.json(req.body)
     }
 
