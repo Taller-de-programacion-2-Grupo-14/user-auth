@@ -1,0 +1,17 @@
+{
+  "title": "login user",
+  "description": "describes properties required to login a user",
+  "type": "object",
+  "properties": {
+    "username": {
+      "type": "string",
+      "description": "username of account"
+    },
+    "password": {
+      "type": "string",
+      "minLength": 8,
+      "description": "password of the account user"
+    }
+  },
+  "required": ["username", "password"]
+}

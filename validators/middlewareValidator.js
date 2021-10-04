@@ -1,9 +1,11 @@
 let Ajv = require('ajv')
 let ajv = new Ajv({ allErrors:true, removeAdditional:'all' })
 const draft6MetaSchema = require("ajv/dist/refs/json-schema-draft-06.json")
-ajv.addMetaSchema(draft6MetaSchema)
-let userSchema = require('./new-user.json')
-ajv.addSchema(userSchema, 'new-user')
+ajv.addMetaSchema(draft6MetaSchema);
+let userSchema = require('./new-user.json');
+let loginSchema = require('./login-user.json');
+ajv.addSchema(userSchema, 'new-user');
+ajv.addSchema(loginSchema, 'login-user');
 
 /**
  * Format error responses
