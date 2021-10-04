@@ -31,14 +31,14 @@ class LocalDB {
 
     GetUser(username) {
         let file = this._getFile();
-        let founded = false;
+        let userFounded = "";
         file.data.every((v) => {
             if (v.username === username) {
-                founded = true;
+                userFounded = v;
             }
-            return !founded;
+            return !userFounded;
         })
-        return founded;
+        return userFounded;
     }
 }
 
