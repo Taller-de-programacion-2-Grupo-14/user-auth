@@ -3,7 +3,14 @@ class UserService {
         this.db = db
     }
     AddUser(values) {
-        console.log("branca la concha de tu madre")
+        if (!this.db.GetUser(values.username)) {
+            this.db.AddUser(values);
+        } else {
+            let e = new Error("user already registered");
+            e.status = 400;
+            throw e;
+        }
+        return true;
     }
 }
 module.exports = UserService
