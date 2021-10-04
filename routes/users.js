@@ -11,6 +11,6 @@ router.get('/', function(req, res, next) {
 userService = new UserService(new db())
 usersContainer = new Users(userService)
 router.post('/', validateSchema('new-user'), (...args) => usersContainer.HandleUserPost(...args))
-
-
+router.post('/login', validateSchema('login-user'), (...args) => usersContainer.HandleUserLogin(...args))
+router.get('/', (...args)=> usersContainer.HandleUserGet(...args))
 module.exports = router;
