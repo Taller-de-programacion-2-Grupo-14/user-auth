@@ -8,25 +8,25 @@ class Users {
             password: req.body.password,
             email: req.body.email
         } //etc
-        try {
-            this.service.AddUser(values)
-        }
-        catch (e) {
-            res.status(503);
-            throw e;
-        }
-        //Todo agregar servicio
+        this.service.AddUser(values)
         res.status(200)
-        return res.json(req.body)
+        let response = {message: `user ${values.username} registered correctly`, status: 200}
+        return res.json(response)
+    }
+
+    HandleUserLogin(req, res) {
+        let values = {
+            username: req.body.username,
+            password: req.body.password
+        }
+        let token = this.service.LoginUser(values)
+        let response = {message: `user ${values.username} is logged correctly`, token: token, status: 200};
+        res.status = 200;
+        res.json(response)
     }
 
     HandleUserGet(req, res) {
-        let userID = req.query.id
-        if (userID < 1) {
-            //throw errors
-        }
-        let userInformation = this.service.FindUser(userID)
-        res.json(userInformation)
+        res.json(this.service.GetUser(req.username))
     }
 }
 
