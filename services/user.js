@@ -5,7 +5,7 @@ class UserService {
     constructor(db) {
         this.db = db
     }
-    async AddUser(values) {
+    AddUser(values) {
         let userData = this.db.GetUser(values.username)
         if (!userData || !(userData.username)) {
             this.db.AddUser(values);
@@ -21,9 +21,9 @@ class UserService {
         return this.db.GetUser(username);
     } //ToDo remove this method
 
-    async LoginUser(values) {
+    LoginUser(values) {
         let user = this.db.GetUser(values.username);
-        if (user !== "" && (values.username !== user.username || values.password !== user.password)) {
+        if (user.username && (values.username !== user.username || values.password !== user.password)) {
             let e = new Error("wrong username or password");
             e.status = 400;
             throw e;
