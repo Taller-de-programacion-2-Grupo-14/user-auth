@@ -17,7 +17,7 @@ services:
       context: ./
     container_name: node
     environment:
-      - DATABASE_URL=postgresql://postgres:postgres@postgres/web_origins
+      - DATABASE_URL=postgresql://postgres:postgres@postgres/test_db
     ports:
       - "8080:8080"
     depends_on:

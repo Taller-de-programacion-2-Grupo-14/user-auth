@@ -6,8 +6,8 @@ class UserService {
         this.db = db
     }
     async AddUser(values) {
-        let userData = await this.db.GetUser(values.username)
-        if (!userData || !(userData.length > 0)) {
+        let userData = this.db.GetUser(values.username)
+        if (!userData || !(userData.username)) {
             this.db.AddUser(values);
         } else {
             let e = new Error("user already registered");
@@ -22,7 +22,7 @@ class UserService {
     } //ToDo remove this method
 
     async LoginUser(values) {
-        let user = await this.db.GetUser(values.username);
+        let user = this.db.GetUser(values.username);
         if (user !== "" && (values.username !== user.username || values.password !== user.password)) {
             let e = new Error("wrong username or password");
             e.status = 400;
