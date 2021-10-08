@@ -23,7 +23,7 @@ services:
       context: ./
     container_name: node
     environment:
-      - DB_URL=postgres://postgres:postgres@pg:5432/test_db
+      - DATABASE_URL=postgres://postgres:postgres@pg:5432/test_db
     ports:
       - "8080:8080"
     depends_on:

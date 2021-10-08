@@ -6,10 +6,10 @@ const Users = require("../controllers/users");
 const persistence = require("../persistence/postgre");
 const { Client } = require('pg');
 
-console.log(process.env.DB_URL)
+console.log(process.env.DATABASE_URL)
 
 const client = new Client({
-  connectionString: process.env.DB_URL,
+  connectionString: process.env.DATABASE_URL,
   query_timeout: 1000,
   statement_timeout: 1000
 })
