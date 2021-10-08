@@ -9,9 +9,12 @@ const { Client } = require('pg');
 console.log(process.env.DATABASE_URL)
 
 const client = new Client({
-  connectionString: process.env.DATABASE_URL,
+  connectionString: process.env.DATABASE_URL || 'postgres://postgres:postgres@localhost/test_db',
   query_timeout: 1000,
-  statement_timeout: 1000
+  statement_timeout: 1000,
+  ssl: process.env.DATABASE_URL ? {
+    rejectUnauthorized: false,
+  } : false,
 })
 function errorHandler(err, req, res, next) {
   // set locals, only providing error in development
