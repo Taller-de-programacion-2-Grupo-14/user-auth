@@ -58,4 +58,36 @@ router.get('/', async (...args) => {
     errorHandler(e, ...args)
   }
 })
+
+async function createTableIfNeeded() {
+  try {
+    const query = 'select * from web_origins limit 1'
+    await new Promise((resolve, reject) => {
+      client.query(query, (err, res) => {
+        if (err) {
+          console.error(err);
+          throw err;
+        }
+      })
+      resolve()
+    })
+  }
+  catch {
+    const query =`CREATE TABLE web_origins (
+        username varchar (255) NOT NULL,
+        password  varchar (255) NOT NULL
+  )`;
+    await new Promise((resolve, reject) => {
+      client.query(query, (err, res) => {
+        if (err) {
+          console.error(err);
+          throw err;
+        }
+      })
+      resolve()
+    })
+  }
+}
+createTableIfNeeded().then(()=>console.log("database should be created"))
+
 module.exports = router;
