@@ -3,13 +3,8 @@
   "version": "0.2.0",
   "private": true,
   "scripts": {
-    "client-install": "npm install --prefix client",
     "start": "node ./bin/www",
-    "test": "jest",
-    "client": "npm start --prefix client",
-    "server": "nodemon server.js",
-    "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "heroku-postbuild":      "NPM_CONFIG_PRODUCTION=false npm install --prefix client        && npm run build --prefix client"
+    "test": "jest"
   },
   "dependencies": {
     "ajv": "^8.6.3",
@@ -25,5 +20,8 @@
   },
   "devDependencies": {
     "express-json-validator-middleware": "^2.2.1"
+  },
+  "engines": {
+    "node": "14.x"
   }
 }
