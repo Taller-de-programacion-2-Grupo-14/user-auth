@@ -26,7 +26,14 @@ class Users {
     }
 
     async HandleUserGet(req, res) {
-        res.json(this.service.GetUser(req.username))
+        let username = req.query.username;
+        let userInfo = await this.service.GetUser(username)
+        if (!(userInfo && userInfo.username)) {
+            let e = new Error("user not found");
+            e.status = 404;
+            throw e;
+        }
+        res.json(userInfo)
     }
 }
 

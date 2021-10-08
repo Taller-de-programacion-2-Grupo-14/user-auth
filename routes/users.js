@@ -6,12 +6,12 @@ const Users = require("../controllers/users");
 const persistence = require("../persistence/postgre");
 const { Client } = require('pg');
 
+console.log(process.env.DB_URL)
+
 const client = new Client({
-  user: 'postgres',
-  host: 'localhost',
-  database: 'test_db',
-  password: 'postgres',
-  port: 5432,
+  connectionString: process.env.DB_URL,
+  query_timeout: 1000,
+  statement_timeout: 1000
 })
 function errorHandler(err, req, res, next) {
   // set locals, only providing error in development
@@ -24,11 +24,8 @@ function errorHandler(err, req, res, next) {
   res.json(errBody)
 }
 
-client.connect();// ToUse in the future
+client.connect();
 /* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
-});
 userService = new UserService(new persistence(client));
 usersContainer = new Users(userService)
 router.post('/', validateSchema('new-user'), async (...args) => {
@@ -49,5 +46,13 @@ router.post('/login', validateSchema('login-user'), async (...args) => {
     errorHandler(e, ...args)
   }
 })
-router.get('/', (...args)=> usersContainer.HandleUserGet(...args))
+router.get('/', async (...args) => {
+  try {
+    await usersContainer.HandleUserGet(...args)
+  }
+  catch (e) {
+    console.log(e)
+    errorHandler(e, ...args)
+  }
+})
 module.exports = router;

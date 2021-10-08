@@ -18,7 +18,8 @@ class PG {
                     throw err;
                 }
             })
-        }).then((v) => console.log(v))
+            resolve()
+        })
     }
     async GetUser(userName) {
         const query = `SELECT *
