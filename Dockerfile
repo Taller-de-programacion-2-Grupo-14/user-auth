@@ -15,6 +15,5 @@ RUN npm install -f --save #Could be interesting to use npm ci
 
 # Bundle app source
 COPY . .
-
 EXPOSE 8080
 CMD [ "npm", "start" ]
