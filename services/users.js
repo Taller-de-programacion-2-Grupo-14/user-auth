@@ -5,10 +5,10 @@ class UserService {
     constructor(db) {
         this.db = db
     }
-    AddUser(values) {
-        let userData = this.db.GetUser(values.username)
+    async AddUser(values) {
+        let userData = await this.db.GetUser(values.username)
         if (!userData || !(userData.username)) {
-            this.db.AddUser(values);
+           await this.db.AddUser(values);
         } else {
             let e = new Error("user already registered");
             e.status = 400;
@@ -17,13 +17,13 @@ class UserService {
         return true;
     }
 
-    GetUser(username) {
-        return this.db.GetUser(username);
+    async GetUser(username) {
+        return await this.db.GetUser(username);
     } //ToDo remove this method
 
-    LoginUser(values) {
-        let user = this.db.GetUser(values.username);
-        if (user.username && (values.username !== user.username || values.password !== user.password)) {
+    async LoginUser(values) {
+        let user = await this.db.GetUser(values.username);
+        if (!(user && user.username) || (values.username !== user.username || values.password !== user.password)) {
             let e = new Error("wrong username or password");
             e.status = 400;
             throw e;
