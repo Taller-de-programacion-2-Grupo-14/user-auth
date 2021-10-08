@@ -1,6 +1,8 @@
 const fs = require('fs')
 const PATH = "persistence/localDB.json"
 class LocalDB {
+    constructor(smt) {
+    }
     //ToDO check private methods, now using norm of python
     _getFile() {
         try {

@@ -1,37 +1,39 @@
+const {rows} = require("pg/lib/defaults");
+
 class PG {
     constructor(client) {
         this.client = client;
     }
 
-    AddUser(userData) {
+    async AddUser(userData) {
         let userName = userData.username;
-        let password = userData.password;
-        const query = `INSERT INTO web_origins (username, password) VALUES (${userName}, ${password})`
+        let pswd = userData.password;
+        const query = `INSERT INTO web_origins (username, password)
+                       VALUES ('${userName}', '${pswd}')`
         const client = this.client;
-        client.query(query, (err, res) => {
-            if (err) {
-                console.error(err);
-                throw err;
-            }
-            console.log('Data insert successful');
-            client.end();
-        })
+        await new Promise((resolve, reject) => {
+            client.query(query, (err, res) => {
+                if (err) {
+                    console.error(err);
+                    throw err;
+                }
+            })
+        }).then((v) => console.log(v))
     }
-    GetUser(username) {
-        let userdata = {};
-        const query = `SELECT * FROM web_origins WHERE username = ${username}`
+    async GetUser(userName) {
+        const query = `SELECT *
+                       FROM web_origins
+                       WHERE username = '${userName}'`;
         const client = this.client;
-        client.query(query, (err, res) => {
-            if (err) {
-                console.log(err);
-                throw err;
-            }
-            for (let row of res.rows) {
-                userdata = row;
-            }
-            client.end()
-        })
-        return userdata;
+        return await new Promise((resolve, reject) => {
+            client.query(query, (err, res) => {
+                if (err) {
+                    console.log(err);
+                    throw err;
+                }
+                resolve(res.rows[0]);
+            });
+        });
     }
 }
 
