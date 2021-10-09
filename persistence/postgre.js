@@ -1,5 +1,3 @@
-const {rows} = require("pg/lib/defaults");
-
 class PG {
     constructor(client) {
         this.client = client;
@@ -8,7 +6,7 @@ class PG {
     async AddUser(userData) {
         let userName = userData.username;
         let pswd = userData.password;
-        const query = `INSERT INTO web_origins (username, password)
+        const query = `INSERT INTO user_registry (username, password)
                        VALUES ('${userName}', '${pswd}')`
         const client = this.client;
         await new Promise((resolve, reject) => {
@@ -23,7 +21,7 @@ class PG {
     }
     async GetUser(userName) {
         const query = `SELECT *
-                       FROM web_origins
+                       FROM user_registry
                        WHERE username = '${userName}'`;
         const client = this.client;
         return await new Promise((resolve, reject) => {
