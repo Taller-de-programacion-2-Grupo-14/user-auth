@@ -35,6 +35,7 @@ let validateSchema = (schemaName) => {
     return (req, res, next) => {
         let valid = ajv.validate(schemaName, req.body)
         if (!valid) {
+            res.status(400);
             return res.send(errorResponse(ajv.errors))
         }
         next()
