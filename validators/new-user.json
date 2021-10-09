@@ -3,21 +3,22 @@
   "description": "describes properties required to create a user",
   "type": "object",
   "properties": {
-    "firstname": {
+    "firstName": {
       "type": "string",
       "description": "firstname of the account user"
     },
-    "lastname": {
+    "lastName": {
       "type": "string",
       "description": "lastname of the account user"
     },
-    "username": {
+    "email": {
       "type": "string",
       "description": "username of account"
     },
-    "rememberEmail": {
-      "type": "boolean",
-      "description": "whether the users email address should be remembered"
+    "role": {
+      "type": "string",
+      "description": "User role",
+      "enum": ["Student", "Collaborator", "Creator"]
     },
     "password": {
       "type": "string",
@@ -25,5 +26,5 @@
       "description": "password of the account user"
     }
   },
-  "required": ["firstname", "lastname", "username", "password"]
+  "required": ["firstName", "lastName", "email", "role", "password"]
 }

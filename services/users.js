@@ -6,7 +6,7 @@ class UserService {
         this.db = db
     }
     async AddUser(values) {
-        let userData = await this.db.GetUser(values.username)
+        let userData = await this.db.GetPrivateUserInfo(values.username)
         if (!userData || !(userData.username)) {
            await this.db.AddUser(values);
         } else {
@@ -19,10 +19,10 @@ class UserService {
 
     async GetUser(username) {
         return await this.db.GetUser(username);
-    } //ToDo remove this method
+    } //Refactor this method
 
     async LoginUser(values) {
-        let user = await this.db.GetUser(values.username);
+        let user = await this.db.GetPrivateUserInfo(values.username);
         if (!(user && user.username) || (values.username !== user.username || values.password !== user.password)) {
             let e = new Error("wrong username or password");
             e.status = 400;
