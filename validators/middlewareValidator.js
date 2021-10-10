@@ -5,9 +5,11 @@ ajv.addMetaSchema(draft6MetaSchema);
 let userSchema = require('./new-user.json');
 let loginSchema = require('./login-user.json');
 let profileSchema = require('./profile-user.json');
+let changePasswordSchema =  require('./update-password.json')
 ajv.addSchema(userSchema, 'new-user');
 ajv.addSchema(loginSchema, 'login-user');
 ajv.addSchema(profileSchema, 'profile-user');
+ajv.addSchema(changePasswordSchema, "change-password");
 
 /**
  * Format error responses
@@ -43,6 +45,4 @@ let validateSchema = (schemaName) => {
         next()
     }
 }
-//ToDo para mañana, continuar con la idea de mejorar los validators, empezar con los tests, y fijarse docker compose.
-//Analizar que base de datos usar y como encajarla, tipo de codigo? TDD? DDD?
 module.exports = {validateSchema}

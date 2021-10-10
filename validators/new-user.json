@@ -3,17 +3,20 @@
   "description": "describes properties required to create a user",
   "type": "object",
   "properties": {
-    "firstName": {
+    "first_name": {
       "type": "string",
-      "description": "firstname of the account user"
+      "description": "firstname of the account user",
+      "minLength": 1
     },
-    "lastName": {
+    "last_name": {
       "type": "string",
-      "description": "lastname of the account user"
+      "description": "lastname of the account user",
+      "minLength": 1
     },
     "email": {
       "type": "string",
-      "description": "username of account"
+      "description": "username of account",
+      "minLength": 3
     },
     "role": {
       "type": "string",
@@ -30,5 +33,5 @@
       "description": "firstname of the account user"
     }
   },
-  "required": ["firstName", "lastName", "email", "role", "password"]
+  "required": ["first_name", "last_name", "email", "role", "password"]
 }
