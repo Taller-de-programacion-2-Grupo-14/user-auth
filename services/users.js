@@ -13,7 +13,7 @@ class UserService {
             values.id = userData.id;
             await this.db.AddUserProfile(values);
         } else {
-            let e = new Error("user already registered");
+            let e = new Error('user already registered');
             e.status = 400;
             throw e;
         }
@@ -37,7 +37,7 @@ class UserService {
 
     throwIfInvalidUser(user, values) {
         if (!(user && user.email) || (values.email !== user.email || values.password !== user.password)) {
-            let e = new Error("wrong username or password");
+            let e = new Error('wrong username or password');
             e.status = 400;
             throw e;
         }
@@ -46,7 +46,7 @@ class UserService {
     async ModifyUserInfo(userInfo) {
         let user = await this.db.GetUserInfo(userInfo.email);
         if (!(user && user.email)) {
-            let e = new Error("user does not exist");
+            let e = new Error('user does not exist');
             e.status = 418;
             throw e;
         }
