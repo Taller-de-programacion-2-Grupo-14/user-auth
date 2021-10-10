@@ -1,4 +1,5 @@
-const jwt = require("jsonwebtoken");
+/*global process*/
+const jwt = require('jsonwebtoken');
 
 function createTableRegistry(client) {
     const query = `CREATE TABLE user_registry
@@ -12,24 +13,24 @@ function createTableRegistry(client) {
 
     CREATE INDEX emailIndex
         ON user_registry (email);`;
-    client.query(query, (err, res) => {
+    client.query(query, (err) => {
         if (err) {
             console.error(err);
             throw err;
         }
-    })
+    });
 }
 
 async function checkUserRegistry(client) {
-    const query = 'select * from user_registry limit 1'
-    await new Promise(async (resolve, reject) => {
-        await client.query(query, (err, res) => {
+    const query = 'select * from user_registry limit 1';
+    await new Promise((resolve) => {
+        client.query(query, (err) => {
             if (err) {
-                createTableRegistry(client)
+                createTableRegistry(client);
             }
-        })
-        resolve()
-    })
+        });
+        resolve();
+    });
 }
 
 function createTableProfile(client) {
@@ -50,24 +51,24 @@ function createTableProfile(client) {
     CREATE INDEX emailIndexProfile
         ON profile_user (email);
     `;
-    client.query(query, (err, res) => {
+    client.query(query, (err) => {
         if (err) {
             console.error(err);
             throw err;
         }
-    })
+    });
 }
 
 async function checkProfileUser(client) {
-    const query = 'select * from profile_user limit 1'
-    await new Promise(async (resolve, reject) => {
-        await client.query(query, (err, res) => {
+    const query = 'select * from profile_user limit 1';
+    await new Promise((resolve) => {
+        client.query(query, (err) => {
             if (err) {
-                createTableProfile(client)
+                createTableProfile(client);
             }
-        })
-        resolve()
-    })
+        });
+        resolve();
+    });
 }
 
 async function createTableIfNeeded(client) {

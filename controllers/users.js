@@ -8,11 +8,11 @@ class Users {
             email: req.body.email,
             password: req.body.password,
             userType: req.body.role,
-            firstName: req.body.first_name || "",
-            lastName: req.body.last_name || "",
-            interest: req.body.interest || "",
-            location: req.body.location || ""
-        }
+            firstName: req.body.first_name || '',
+            lastName: req.body.last_name || '',
+            interest: req.body.interest || '',
+            location: req.body.location || ''
+        };
         await this.service.AddUser(values);
         res.status(200);
         let response = {message: `user ${values.email} registered correctly`, status: 200};
@@ -23,7 +23,7 @@ class Users {
         let values = {
             email: req.body.email,
             password: req.body.password
-        }
+        };
         let token = await this.service.LoginUser(values);
         let response = {message: `user ${values.email} is logged correctly`, token: token, status: 200};
         res.status = 200;
@@ -32,9 +32,9 @@ class Users {
 
     async HandleUserGet(req, res) {
         let email = req.query.email;
-        let userInfo = await this.service.GetUser(email)
+        let userInfo = await this.service.GetUser(email);
         if (!(userInfo && userInfo.email)) {
-            let e = new Error("user not found");
+            let e = new Error('user not found');
             e.status = 404;
             throw e;
         }
@@ -62,9 +62,9 @@ class Users {
             role: req.decoded.role,
             password: req.body.password,
             newPassword: req.body.newPassword
-        }
+        };
         await this.service.UpdateUserPassword(information);
-        let message = {"message": `${information.email} password updated correctly`, status: 200};
+        let message = {'message': `${information.email} password updated correctly`, status: 200};
         res.status(200).json(message);
     }
 
@@ -75,9 +75,9 @@ class Users {
             password: req.body.password
         };
         await this.service.RemoveUser(information);
-        let message = {"message": `${information.email} deleted correctly`, status: 200};
+        let message = {'message': `${information.email} deleted correctly`, status: 200};
         res.status(200).json(message);
     }
 }
 
-module.exports = Users
+module.exports = Users;

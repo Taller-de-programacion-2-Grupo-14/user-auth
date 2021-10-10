@@ -1,19 +1,20 @@
+/*global process*/
 const jwt = require('jsonwebtoken');
 
 class UserService {
     constructor(db) {
-        this.db = db
+        this.db = db;
     }
 
     async AddUser(values) {
-        let userData = await this.db.GetPrivateUserInfo(values.email)
+        let userData = await this.db.GetPrivateUserInfo(values.email);
         if (!userData || !(userData.email)) {
             await this.db.AddUser(values);
-            userData = await this.db.GetPrivateUserInfo(values.email)
+            userData = await this.db.GetPrivateUserInfo(values.email);
             values.id = userData.id;
             await this.db.AddUserProfile(values);
         } else {
-            let e = new Error("user already registered");
+            let e = new Error('user already registered');
             e.status = 400;
             throw e;
         }
@@ -31,13 +32,13 @@ class UserService {
         let relevantInfo = {
             email: userInfo.email,
             role: userInfo.role
-        }
+        };
         return jwt.sign(relevantInfo, process.env.secret, {algorithm: process.env.algorithm, expiresIn: '2h'});
     }
 
     throwIfInvalidUser(user, values) {
         if (!(user && user.email) || (values.email !== user.email || values.password !== user.password)) {
-            let e = new Error("wrong username or password");
+            let e = new Error('wrong username or password');
             e.status = 400;
             throw e;
         }
@@ -46,7 +47,7 @@ class UserService {
     async ModifyUserInfo(userInfo) {
         let user = await this.db.GetUserInfo(userInfo.email);
         if (!(user && user.email)) {
-            let e = new Error("user does not exist");
+            let e = new Error('user does not exist');
             e.status = 418;
             throw e;
         }
@@ -56,7 +57,7 @@ class UserService {
             interest: userInfo.interest || user.interest,
             location: userInfo.location || user.location,
             email: userInfo.email
-        }
+        };
         await this.db.UpdateUserProfile(values);
     }
 
@@ -73,4 +74,4 @@ class UserService {
     }
 }
 
-module.exports = UserService
+module.exports = UserService;
