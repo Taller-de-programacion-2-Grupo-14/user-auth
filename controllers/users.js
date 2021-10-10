@@ -13,10 +13,10 @@ class Users {
             interest: req.body.interest || "",
             location: req.body.location || ""
         }
-        await this.service.AddUser(values)
-        res.status(200)
-        let response = {message: `user ${values.email} registered correctly`, status: 200}
-        return res.json(response)
+        await this.service.AddUser(values);
+        res.status(200);
+        let response = {message: `user ${values.email} registered correctly`, status: 200};
+        return res.json(response);
     }
 
     async HandleUserLogin(req, res) {
@@ -24,10 +24,10 @@ class Users {
             email: req.body.email,
             password: req.body.password
         }
-        let token = await this.service.LoginUser(values)
+        let token = await this.service.LoginUser(values);
         let response = {message: `user ${values.email} is logged correctly`, token: token, status: 200};
         res.status = 200;
-        res.json(response)
+        res.json(response);
     }
 
     async HandleUserGet(req, res) {
@@ -72,7 +72,7 @@ class Users {
         let information = {
             email: req.decoded.email,
             role: req.decoded.role,
-            password: req.body.password,
+            password: req.body.password
         };
         await this.service.RemoveUser(information);
         let message = {"message": `${information.email} deleted correctly`, status: 200};
