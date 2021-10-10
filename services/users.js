@@ -32,7 +32,6 @@ class UserService {
             e.status = 400;
             throw e;
         }
-        console.log(user);
         return jwt.sign(user, secret, {algorithm: algorithm, expiresIn: '2h'});
     }
 

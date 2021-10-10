@@ -4,6 +4,7 @@ const {validateSchema} = require("../validators/middlewareValidator");
 const UserService = require("../services/users");
 const Users = require("../controllers/users");
 const persistence = require("../persistence/postgre");
+const herokuCheck = require("./doFirstConnectHeroku")
 
 console.log(process.env.DATABASE_URL || process.env.DB_URL)
 const {Client} = require("pg");
@@ -18,32 +19,7 @@ let client = new Client({
 })
 
 client.connect();
-
-function createTable() {
-    const otherQuery = `CREATE TABLE user_registry
-                            (
-                                username varchar(255) NOT NULL,
-                                password varchar(255) NOT NULL
-                            )`;
-    client.query(otherQuery, (err, res) => {
-        if (err) {
-            console.error(err);
-            throw err;
-        }
-    })
-}
-async function createTableIfNeeded() {
-    const query = 'select * from user_registry limit 1'
-    await new Promise(async (resolve, reject) => {
-        await client.query(query, (err, res) => {
-            if (err) {
-                createTable()
-            }
-        })
-        resolve()
-    })
-}
-createTableIfNeeded();
+herokuCheck(client);
 
 function errorHandler(err, req, res, next) {
     // set locals, only providing error in development
