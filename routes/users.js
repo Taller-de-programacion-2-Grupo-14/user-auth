@@ -4,7 +4,8 @@ const {validateSchema} = require("../validators/middlewareValidator");
 const UserService = require("../services/users");
 const Users = require("../controllers/users");
 const persistence = require("../persistence/postgre");
-const herokuCheck = require("./doFirstConnectHeroku")
+const helper = require("./helper")
+const jwt = require('jsonwebtoken');
 
 console.log(process.env.DATABASE_URL || process.env.DB_URL)
 const {Client} = require("pg");
@@ -19,7 +20,7 @@ let client = new Client({
 })
 
 client.connect();
-herokuCheck(client);
+helper.createTableIfNeeded(client);
 
 function errorHandler(err, req, res, next) {
     // set locals, only providing error in development

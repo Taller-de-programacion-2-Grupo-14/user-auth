@@ -1,3 +1,5 @@
+const jwt = require("jsonwebtoken");
+
 function createTableRegistry(client) {
     const query = `CREATE TABLE user_registry
                    (
@@ -37,7 +39,7 @@ function createTableProfile(client) {
                        email      varchar(255),
                        first_name varchar(100) NOT NULL,
                        last_name  varchar(100) NOT NULL,
-                       role  varchar(20) CHECK (role IN ('Student', 'Collaborator', 'Creator')),
+                       role       varchar(20) CHECK (role IN ('Student', 'Collaborator', 'Creator')),
                        interest   varchar(255),
                        location   varchar(255),
                        PRIMARY KEY (user_id),
@@ -74,4 +76,37 @@ async function createTableIfNeeded(client) {
 
 }
 
-module.exports = createTableIfNeeded;
+function verify(req, res, next) {
+    var token = req.headers['x-access-token'];
+    console.log(token);
+    if (token) {
+        jwt.verify(token, process.env.secret,
+            {
+                algorithm: process.env.algorithm
+
+            }, function (err, decoded) {
+                if (err) {
+                    let errordata = {
+                        message: err.message,
+                        expiredAt: err.expiredAt
+                    };
+                    console.log(errordata);
+                    return res.status(401).json({
+                        message: 'Unauthorized Access'
+                    });
+                }
+                req.decoded = decoded;
+                console.log(decoded);
+                next();
+            });
+    } else {
+        return res.status(403).json({
+            message: 'Forbidden Access'
+        });
+    }
+}
+
+module.exports = {
+    createTableIfNeeded: createTableIfNeeded,
+    verify: verify
+};
