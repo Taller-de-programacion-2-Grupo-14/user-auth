@@ -33,15 +33,16 @@ function errorHandler(err, req, res, next) {
     res.json(errBody)
 
 }
+
 /* GET users listing. */
 userService = new UserService(new persistence(client));
 usersContainer = new Users(userService)
 router.post('/', validateSchema('new-user'), async (...args) => {
-    await doRequest(args, async(...args) => await usersContainer.HandleUserPost(...args))
+    await doRequest(args, async (...args) => await usersContainer.HandleUserPost(...args))
 })
 
 router.post('/login', validateSchema('login-user'), async (...args) => {
-    await doRequest(args, async(...args) => await usersContainer.HandleUserLogin(...args))
+    await doRequest(args, async (...args) => await usersContainer.HandleUserLogin(...args))
 })
 
 async function doRequest(args, method) {
@@ -54,19 +55,19 @@ async function doRequest(args, method) {
 }
 
 router.get('/', async (...args) => {
-    await doRequest(args, async(...args) => await usersContainer.HandleUserGet(...args));
+    await doRequest(args, async (...args) => await usersContainer.HandleUserGet(...args));
 })
 
 router.patch('/', validateSchema('profile-user'), async (...args) => {
-    await doRequest(args, async(...args) => await usersContainer.HandleUserPut(...args));
+    await doRequest(args, async (...args) => await usersContainer.HandleUserPut(...args));
 })
 
 router.patch('/change-password', validateSchema('change-password'), helper.verify, async (...args) => {
-    await doRequest(args, async(...args) => await usersContainer.HandleUserChangePassword(...args));
+    await doRequest(args, async (...args) => await usersContainer.HandleUserChangePassword(...args));
 })
 
 router.delete('/delete-user', helper.verify, async (...args) => {
-    await doRequest(args, async(...args) => await usersContainer.HandleUserDelete(...args));
+    await doRequest(args, async (...args) => await usersContainer.HandleUserDelete(...args));
 })
 
 module.exports = router;

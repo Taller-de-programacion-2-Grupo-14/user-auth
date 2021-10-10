@@ -96,7 +96,7 @@ class PG {
 
     async UpdateUserRegistry(information) {
         const query = `UPDATE user_registry
-                       SET email = '${information.email}',
+                       SET email    = '${information.email}',
                            password = '${information.newPassword}'
                        WHERE email = '${information.email}'`;
         const client = this.client;
@@ -112,7 +112,9 @@ class PG {
     }
 
     async DeleteUser(information) {
-        const query = `delete from user_registry where email = '${information.email}'`
+        const query = `delete
+                       from user_registry
+                       where email = '${information.email}'`
         const client = this.client;
         await new Promise((resolve, reject) => {
             client.query(query, (err, res) => {
