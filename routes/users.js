@@ -80,4 +80,8 @@ router.get('/', async (...args) => {
     await doRequest(args, async(...args) => await usersContainer.HandleUserGet(...args));
 })
 
+router.patch('/', validateSchema('profile-user'), async (...args) => {
+    await doRequest(args, async(...args) => await usersContainer.HandleUserPut(...args));
+})
+
 module.exports = router;

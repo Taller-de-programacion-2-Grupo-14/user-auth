@@ -4,36 +4,55 @@ class Users {
     }
     async HandleUserPost(req, res) {
         let values = {
-            username: req.body.username,
+            email: req.body.email,
             password: req.body.password,
-            email: req.body.email
-        } //etc
+            userType: req.body.role,
+            firstName: req.body.firstName || "",
+            lastName: req.body.lastName || "",
+            interest: req.body.interest || "",
+            location: req.body.location || ""
+        }
         await this.service.AddUser(values)
         res.status(200)
-        let response = {message: `user ${values.username} registered correctly`, status: 200}
+        let response = {message: `user ${values.email} registered correctly`, status: 200}
         return res.json(response)
     }
 
     async HandleUserLogin(req, res) {
         let values = {
-            username: req.body.username,
+            email: req.body.email,
             password: req.body.password
         }
         let token = await this.service.LoginUser(values)
-        let response = {message: `user ${values.username} is logged correctly`, token: token, status: 200};
+        let response = {message: `user ${values.email} is logged correctly`, token: token, status: 200};
         res.status = 200;
         res.json(response)
     }
 
     async HandleUserGet(req, res) {
-        let username = req.query.username;
-        let userInfo = await this.service.GetUser(username)
-        if (!(userInfo && userInfo.username)) {
+        let email = req.query.email;
+        let userInfo = await this.service.GetUser(email)
+        if (!(userInfo && userInfo.email)) {
             let e = new Error("user not found");
             e.status = 404;
             throw e;
         }
-        res.json(userInfo)
+        res.json(userInfo);
+    }
+
+    async HandleUserPut(req, res) {
+        let values = {
+            email: req.body.email,
+            userType: req.body.role,
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+            interest: req.body.interest
+        }
+        await this.service.ModifyUserInfo(values);
+        const status = 200;
+        res.status(status);
+        let response = {message: `user ${values.email} modified correctly`, status: status}
+        res.json(response);
     }
 }
 
