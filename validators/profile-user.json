@@ -8,12 +8,12 @@
       "minLength": 3,
       "description": "Email of the user"
     },
-    "firstName": {
+    "first_name": {
       "type": "string",
       "minLength": 1,
       "description": "First name of the user"
     },
-    "lastName": {
+    "last_name": {
       "type": "string",
       "minLength": 1,
       "description": "Last name of the user"
