@@ -9,8 +9,8 @@ class PG {
         const query = `INSERT INTO user_registry (email, password)
                        VALUES ('${email}', '${pswd}')`;
         const client = this.client;
-        await new Promise((resolve, reject) => {
-            client.query(query, (err, res) => {
+        await new Promise((resolve) => {
+            client.query(query, (err) => {
                 if (err) {
                     console.error(err);
                     throw err;
@@ -26,7 +26,7 @@ class PG {
                        WHERE email = '${email}'`;
         const client = this.client;
         console.log(`user is tried to get with email ${email}`);
-        return await new Promise((resolve, reject) => {
+        return await new Promise((resolve) => {
             client.query(query, (err, res) => {
                 if (err) {
                     console.log(err);
@@ -42,7 +42,7 @@ class PG {
                        FROM profile_user
                        WHERE email = '${email}'`;
         const client = this.client;
-        return await new Promise((resolve, reject) => {
+        return await new Promise((resolve) => {
             client.query(query, (err, res) => {
                 if (err) {
                     console.log(err);
@@ -64,7 +64,7 @@ class PG {
                                '${userInfo.interest}',
                                '${userInfo.location}')`;
         const client = this.client;
-        return await new Promise((resolve, reject) => {
+        return await new Promise((resolve) => {
             client.query(query, (err, res) => {
                 if (err) {
                     console.log(err);
@@ -83,8 +83,8 @@ class PG {
                            location   = '${userInfo.location}'
                        WHERE email = '${userInfo.email}'`;
         const client = this.client;
-        return await new Promise((resolve, reject) => {
-            client.query(query, (err, res) => {
+        return await new Promise((resolve) => {
+            client.query(query, (err) => {
                 if (err) {
                     console.log(err);
                     throw err;
@@ -100,8 +100,8 @@ class PG {
                            password = '${information.newPassword}'
                        WHERE email = '${information.email}'`;
         const client = this.client;
-        return await new Promise((resolve, reject) => {
-            client.query(query, (err, res) => {
+        return await new Promise((resolve) => {
+            client.query(query, (err) => {
                 if (err) {
                     console.log(err);
                     throw err;
@@ -114,8 +114,8 @@ class PG {
     async DeleteUser(information) {
         const query = `delete from user_registry where email = '${information.email}'`;
         const client = this.client;
-        await new Promise((resolve, reject) => {
-            client.query(query, (err, res) => {
+        await new Promise((resolve) => {
+            client.query(query, (err) => {
                 if (err) {
                     console.log(err);
                     throw err;

@@ -1,3 +1,4 @@
+/*global process*/
 let express = require('express');
 let router = express.Router();
 const {validateSchema} = require('../validators/middlewareValidator');
@@ -5,8 +6,7 @@ const UserService = require('../services/users');
 const Users = require('../controllers/users');
 const persistence = require('../persistence/postgre');
 const helper = require('./helper');
-const jwt = require('jsonwebtoken');
-
+require('jsonwebtoken');
 console.log(process.env.DATABASE_URL || process.env.DB_URL);
 const {Client} = require('pg');
 
@@ -22,7 +22,7 @@ let client = new Client({
 client.connect();
 helper.createTableIfNeeded(client);
 
-function errorHandler(err, req, res, next) {
+function errorHandler(err, req, res) {
     // set locals, only providing error in development
     res.locals.message = err.message;
 
@@ -34,8 +34,8 @@ function errorHandler(err, req, res, next) {
 
 }
 /* GET users listing. */
-userService = new UserService(new persistence(client));
-usersContainer = new Users(userService);
+let userService = new UserService(new persistence(client));
+let usersContainer = new Users(userService);
 router.post('/', validateSchema('new-user'), async (...args) => {
     await doRequest(args, async(...args) => await usersContainer.HandleUserPost(...args));
 });

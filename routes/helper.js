@@ -1,3 +1,4 @@
+/*global process*/
 const jwt = require('jsonwebtoken');
 
 function createTableRegistry(client) {
@@ -12,7 +13,7 @@ function createTableRegistry(client) {
 
     CREATE INDEX emailIndex
         ON user_registry (email);`;
-    client.query(query, (err, res) => {
+    client.query(query, (err) => {
         if (err) {
             console.error(err);
             throw err;
@@ -22,8 +23,8 @@ function createTableRegistry(client) {
 
 async function checkUserRegistry(client) {
     const query = 'select * from user_registry limit 1';
-    await new Promise(async (resolve, reject) => {
-        await client.query(query, (err, res) => {
+    await new Promise((resolve) => {
+        client.query(query, (err) => {
             if (err) {
                 createTableRegistry(client);
             }
@@ -50,7 +51,7 @@ function createTableProfile(client) {
     CREATE INDEX emailIndexProfile
         ON profile_user (email);
     `;
-    client.query(query, (err, res) => {
+    client.query(query, (err) => {
         if (err) {
             console.error(err);
             throw err;
@@ -60,8 +61,8 @@ function createTableProfile(client) {
 
 async function checkProfileUser(client) {
     const query = 'select * from profile_user limit 1';
-    await new Promise(async (resolve, reject) => {
-        await client.query(query, (err, res) => {
+    await new Promise((resolve) => {
+        client.query(query, (err) => {
             if (err) {
                 createTableProfile(client);
             }

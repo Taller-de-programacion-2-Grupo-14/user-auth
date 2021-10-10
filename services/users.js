@@ -1,3 +1,4 @@
+/*global process*/
 const jwt = require('jsonwebtoken');
 
 class UserService {
