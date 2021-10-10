@@ -110,6 +110,20 @@ class PG {
             });
         });
     }
+
+    async DeleteUser(information) {
+        const query = `delete from user_registry where email = '${information.email}'`
+        const client = this.client;
+        await new Promise((resolve, reject) => {
+            client.query(query, (err, res) => {
+                if (err) {
+                    console.log(err);
+                    throw err;
+                }
+                resolve();
+            });
+        });
+    }
 }
 
 module.exports = PG

@@ -65,4 +65,8 @@ router.patch('/change-password', validateSchema('change-password'), helper.verif
     await doRequest(args, async(...args) => await usersContainer.HandleUserChangePassword(...args));
 })
 
+router.delete('/delete-user', helper.verify, async (...args) => {
+    await doRequest(args, async(...args) => await usersContainer.HandleUserDelete(...args));
+})
+
 module.exports = router;

@@ -67,6 +67,17 @@ class Users {
         let message = {"message": `${information.email} password updated correctly`, status: 200};
         res.status(200).json(message);
     }
+
+    async HandleUserDelete(req, res) {
+        let information = {
+            email: req.decoded.email,
+            role: req.decoded.role,
+            password: req.body.password,
+        };
+        await this.service.RemoveUser(information);
+        let message = {"message": `${information.email} deleted correctly`, status: 200};
+        res.status(200).json(message);
+    }
 }
 
 module.exports = Users

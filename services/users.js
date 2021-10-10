@@ -62,8 +62,14 @@ class UserService {
 
     async UpdateUserPassword(information) {
         let userInfo = await this.db.GetPrivateUserInfo(information.email);
-        this.throwIfInvalidUser(userInfo, information)
-        await this.db.UpdateUserRegistry(information)
+        this.throwIfInvalidUser(userInfo, information);
+        await this.db.UpdateUserRegistry(information);
+    }
+
+    async RemoveUser(information) {
+        let userInfo = await this.db.GetPrivateUserInfo(information.email);
+        this.throwIfInvalidUser(userInfo, information);
+        await this.db.DeleteUser(information);
     }
 }
 
