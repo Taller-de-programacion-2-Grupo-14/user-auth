@@ -44,7 +44,7 @@ class Users {
     async HandleUserPut(req, res) {
         let values = {
             email: req.body.email,
-            userType: req.body.role,
+            location: req.body.location,
             firstName: req.body.first_name,
             lastName: req.body.last_name,
             interest: req.body.interest
