@@ -16,7 +16,7 @@ CREATE TABLE profile_user
     email      varchar(255),
     first_name varchar(100) NOT NULL,
     last_name  varchar(100) NOT NULL,
-    user_type  varchar(20) CHECK (user_type IN ('Student', 'Collaborator', 'Creator')),
+    role  varchar(20) CHECK (role IN ('Student', 'Collaborator', 'Creator')),
     interest   varchar(255),
     location   varchar(255),
     PRIMARY KEY (user_id),
