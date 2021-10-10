@@ -33,6 +33,7 @@ function errorHandler(err, req, res) {
     res.json(errBody);
 
 }
+
 /* GET users listing. */
 let userService = new UserService(new persistence(client));
 let usersContainer = new Users(userService);

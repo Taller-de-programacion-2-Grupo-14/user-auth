@@ -52,8 +52,8 @@ class UserService {
             throw e;
         }
         let values = {
-            firstName: userInfo.firstName || user.firstName,
-            lastName: userInfo.lastName || user.lastName,
+            firstName: userInfo.firstName || user.first_name,
+            lastName: userInfo.lastName || user.last_name,
             interest: userInfo.interest || user.interest,
             location: userInfo.location || user.location,
             email: userInfo.email

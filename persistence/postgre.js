@@ -96,7 +96,7 @@ class PG {
 
     async UpdateUserRegistry(information) {
         const query = `UPDATE user_registry
-                       SET email = '${information.email}',
+                       SET email    = '${information.email}',
                            password = '${information.newPassword}'
                        WHERE email = '${information.email}'`;
         const client = this.client;

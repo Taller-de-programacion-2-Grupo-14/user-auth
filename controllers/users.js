@@ -72,7 +72,7 @@ class Users {
         let information = {
             email: req.decoded.email,
             role: req.decoded.role,
-            password: req.body.password,
+            password: req.body.password
         };
         await this.service.RemoveUser(information);
         let message = {'message': `${information.email} deleted correctly`, status: 200};
