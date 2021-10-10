@@ -7,7 +7,7 @@ class PG {
         let email = userData.email;
         let pswd = userData.password;
         const query = `INSERT INTO user_registry (email, password)
-                       VALUES ('${email}', '${pswd}')`
+                       VALUES ('${email}', '${pswd}')`;
         const client = this.client;
         await new Promise((resolve, reject) => {
             client.query(query, (err, res) => {
@@ -15,9 +15,9 @@ class PG {
                     console.error(err);
                     throw err;
                 }
-            })
+            });
             resolve();
-        })
+        });
     }
 
     async GetPrivateUserInfo(email) {
@@ -25,7 +25,7 @@ class PG {
                        FROM user_registry
                        WHERE email = '${email}'`;
         const client = this.client;
-        console.log(`user is tried to get with email ${email}`)
+        console.log(`user is tried to get with email ${email}`);
         return await new Promise((resolve, reject) => {
             client.query(query, (err, res) => {
                 if (err) {
@@ -112,7 +112,7 @@ class PG {
     }
 
     async DeleteUser(information) {
-        const query = `delete from user_registry where email = '${information.email}'`
+        const query = `delete from user_registry where email = '${information.email}'`;
         const client = this.client;
         await new Promise((resolve, reject) => {
             client.query(query, (err, res) => {
@@ -126,4 +126,4 @@ class PG {
     }
 }
 
-module.exports = PG
+module.exports = PG;

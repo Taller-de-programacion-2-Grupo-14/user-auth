@@ -2,14 +2,14 @@ const jwt = require('jsonwebtoken');
 
 class UserService {
     constructor(db) {
-        this.db = db
+        this.db = db;
     }
 
     async AddUser(values) {
-        let userData = await this.db.GetPrivateUserInfo(values.email)
+        let userData = await this.db.GetPrivateUserInfo(values.email);
         if (!userData || !(userData.email)) {
             await this.db.AddUser(values);
-            userData = await this.db.GetPrivateUserInfo(values.email)
+            userData = await this.db.GetPrivateUserInfo(values.email);
             values.id = userData.id;
             await this.db.AddUserProfile(values);
         } else {
@@ -31,7 +31,7 @@ class UserService {
         let relevantInfo = {
             email: userInfo.email,
             role: userInfo.role
-        }
+        };
         return jwt.sign(relevantInfo, process.env.secret, {algorithm: process.env.algorithm, expiresIn: '2h'});
     }
 
@@ -56,7 +56,7 @@ class UserService {
             interest: userInfo.interest || user.interest,
             location: userInfo.location || user.location,
             email: userInfo.email
-        }
+        };
         await this.db.UpdateUserProfile(values);
     }
 
@@ -73,4 +73,4 @@ class UserService {
     }
 }
 
-module.exports = UserService
+module.exports = UserService;

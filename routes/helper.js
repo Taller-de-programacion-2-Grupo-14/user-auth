@@ -1,4 +1,4 @@
-const jwt = require("jsonwebtoken");
+const jwt = require('jsonwebtoken');
 
 function createTableRegistry(client) {
     const query = `CREATE TABLE user_registry
@@ -17,19 +17,19 @@ function createTableRegistry(client) {
             console.error(err);
             throw err;
         }
-    })
+    });
 }
 
 async function checkUserRegistry(client) {
-    const query = 'select * from user_registry limit 1'
+    const query = 'select * from user_registry limit 1';
     await new Promise(async (resolve, reject) => {
         await client.query(query, (err, res) => {
             if (err) {
-                createTableRegistry(client)
+                createTableRegistry(client);
             }
-        })
-        resolve()
-    })
+        });
+        resolve();
+    });
 }
 
 function createTableProfile(client) {
@@ -55,19 +55,19 @@ function createTableProfile(client) {
             console.error(err);
             throw err;
         }
-    })
+    });
 }
 
 async function checkProfileUser(client) {
-    const query = 'select * from profile_user limit 1'
+    const query = 'select * from profile_user limit 1';
     await new Promise(async (resolve, reject) => {
         await client.query(query, (err, res) => {
             if (err) {
-                createTableProfile(client)
+                createTableProfile(client);
             }
-        })
-        resolve()
-    })
+        });
+        resolve();
+    });
 }
 
 async function createTableIfNeeded(client) {
