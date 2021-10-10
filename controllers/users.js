@@ -2,13 +2,14 @@ class Users {
     constructor(service) {
         this.service = service;
     }
+
     async HandleUserPost(req, res) {
         let values = {
             email: req.body.email,
             password: req.body.password,
             userType: req.body.role,
-            firstName: req.body.firstName || "",
-            lastName: req.body.lastName || "",
+            firstName: req.body.first_name || "",
+            lastName: req.body.last_name || "",
             interest: req.body.interest || "",
             location: req.body.location || ""
         }
@@ -44,15 +45,27 @@ class Users {
         let values = {
             email: req.body.email,
             userType: req.body.role,
-            firstName: req.body.firstName,
-            lastName: req.body.lastName,
+            firstName: req.body.first_name,
+            lastName: req.body.last_name,
             interest: req.body.interest
-        }
+        };
         await this.service.ModifyUserInfo(values);
         const status = 200;
         res.status(status);
-        let response = {message: `user ${values.email} modified correctly`, status: status}
+        let response = {message: `user ${values.email} modified correctly`, status: status};
         res.json(response);
+    }
+
+    async HandleUserChangePassword(req, res) {
+        let information = {
+            email: req.decoded.email,
+            role: req.decoded.role,
+            password: req.body.password,
+            newPassword: req.body.newPassword
+        }
+        await this.service.UpdateUserPassword(information);
+        let message = {"message": `${information.email} password updated correctly`, status: 200};
+        res.status(200).json(message);
     }
 }
 

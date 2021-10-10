@@ -1,6 +1,5 @@
 const jwt = require('jsonwebtoken');
-const secret = "Branca me rompio la tele";
-const algorithm = "HS256" //FixMe move this to another place
+
 class UserService {
     constructor(db) {
         this.db = db
@@ -27,12 +26,21 @@ class UserService {
 
     async LoginUser(values) {
         let user = await this.db.GetPrivateUserInfo(values.email);
+        this.throwIfInvalidUser(user, values);
+        let userInfo = await this.db.GetUserInfo(values.email);
+        let relevantInfo = {
+            email: userInfo.email,
+            role: userInfo.role
+        }
+        return jwt.sign(relevantInfo, process.env.secret, {algorithm: process.env.algorithm, expiresIn: '2h'});
+    }
+
+    throwIfInvalidUser(user, values) {
         if (!(user && user.email) || (values.email !== user.email || values.password !== user.password)) {
             let e = new Error("wrong username or password");
             e.status = 400;
             throw e;
         }
-        return jwt.sign(user, secret, {algorithm: algorithm, expiresIn: '2h'});
     }
 
     async ModifyUserInfo(userInfo) {
@@ -50,6 +58,12 @@ class UserService {
             email: userInfo.email
         }
         await this.db.UpdateUserProfile(values);
+    }
+
+    async UpdateUserPassword(information) {
+        let userInfo = await this.db.GetPrivateUserInfo(information.email);
+        this.throwIfInvalidUser(userInfo, information)
+        await this.db.UpdateUserRegistry(information)
     }
 }
 

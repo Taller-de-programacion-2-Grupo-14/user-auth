@@ -55,7 +55,7 @@ class PG {
 
     async AddUserProfile(userInfo) {
         const query = `INSERT INTO profile_user
-                           (user_id, email, first_name, last_name, user_type, interest, location)
+                           (user_id, email, first_name, last_name, role, interest, location)
                        VALUES ('${userInfo.id}',
                                '${userInfo.email}',
                                '${userInfo.firstName}',
@@ -82,6 +82,23 @@ class PG {
                            interest   = '${userInfo.interest}',
                            location   = '${userInfo.location}'
                        WHERE email = '${userInfo.email}'`;
+        const client = this.client;
+        return await new Promise((resolve, reject) => {
+            client.query(query, (err, res) => {
+                if (err) {
+                    console.log(err);
+                    throw err;
+                }
+                resolve();
+            });
+        });
+    }
+
+    async UpdateUserRegistry(information) {
+        const query = `UPDATE user_registry
+                       SET email = '${information.email}',
+                           password = '${information.newPassword}'
+                       WHERE email = '${information.email}'`;
         const client = this.client;
         return await new Promise((resolve, reject) => {
             client.query(query, (err, res) => {

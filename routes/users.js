@@ -61,4 +61,8 @@ router.patch('/', validateSchema('profile-user'), async (...args) => {
     await doRequest(args, async(...args) => await usersContainer.HandleUserPut(...args));
 })
 
+router.patch('/change-password', validateSchema('change-password'), helper.verify, async (...args) => {
+    await doRequest(args, async(...args) => await usersContainer.HandleUserChangePassword(...args));
+})
+
 module.exports = router;
