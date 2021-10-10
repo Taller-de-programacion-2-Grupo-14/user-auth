@@ -24,6 +24,10 @@
       "type": "string",
       "minLength": 8,
       "description": "password of the account user"
+    },
+    "location": {
+      "type": "string",
+      "description": "firstname of the account user"
     }
   },
   "required": ["firstName", "lastName", "email", "role", "password"]

@@ -4,8 +4,10 @@ const draft6MetaSchema = require("ajv/dist/refs/json-schema-draft-06.json")
 ajv.addMetaSchema(draft6MetaSchema);
 let userSchema = require('./new-user.json');
 let loginSchema = require('./login-user.json');
+let profileSchema = require('./profile-user.json');
 ajv.addSchema(userSchema, 'new-user');
 ajv.addSchema(loginSchema, 'login-user');
+ajv.addSchema(profileSchema, 'profile-user');
 
 /**
  * Format error responses
