@@ -5,11 +5,9 @@
   "scripts": {
     "start": "node ./bin/www",
     "test": "jest",
-    "lint:scss": "stylelint '**/*.scss' --syntax scss -f verbose --color",
-    "lint:scss:fix": "stylelint '**/*.scss' --syntax scss --fix -f verbose —color",
     "lint:js": "eslint '**/*.js' --ignore-pattern node\\_modules/",
     "lint:js:fix": "eslint '**/*.js' --ignore-pattern node\\_modules/ --fix",
-    "lint": "npm run lint:js && npm run lint:scss"
+    "lint": "npm run lint:js"
   },
   "dependencies": {
     "ajv": "^8.6.3",
