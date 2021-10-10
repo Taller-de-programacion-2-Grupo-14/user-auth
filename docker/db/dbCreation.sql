@@ -14,8 +14,8 @@ CREATE TABLE profile_user
 (
     user_id    int            NOT NULL,
     email      varchar(255),
-    first_name character(100) NOT NULL,
-    last_name  character(100) NOT NULL,
+    first_name varchar(100) NOT NULL,
+    last_name  varchar(100) NOT NULL,
     user_type  varchar(20) CHECK (user_type IN ('Student', 'Collaborator', 'Creator')),
     interest   varchar(255),
     location   varchar(255),
@@ -24,5 +24,5 @@ CREATE TABLE profile_user
     UNIQUE (email)
 );
 
-CREATE INDEX emailIndex
+CREATE INDEX emailIndexProfile
     ON profile_user (email);
