@@ -79,7 +79,6 @@ async function createTableIfNeeded(client) {
 
 function verify(req, res, next) {
     var token = req.headers['x-access-token'];
-    console.log(token);
     if (token) {
         jwt.verify(token, process.env.secret,
             {
@@ -97,7 +96,6 @@ function verify(req, res, next) {
                     });
                 }
                 req.decoded = decoded;
-                console.log(decoded);
                 next();
             });
     } else {

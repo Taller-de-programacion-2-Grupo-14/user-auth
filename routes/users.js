@@ -9,6 +9,14 @@ const helper = require('./helper');
 require('jsonwebtoken');
 console.log(process.env.DATABASE_URL || process.env.DB_URL);
 const {Client} = require('pg');
+const nodemailer = require('nodemailer');
+let transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: 'ubademy.14@gmail.com',
+        pass: 'Brancahdp123'
+    }
+});
 
 let client = new Client({
     connectionString: process.env.DATABASE_URL || process.env.DB_URL,
@@ -69,5 +77,23 @@ router.patch('/change-password', validateSchema('change-password'), helper.verif
 router.delete('/delete-user', helper.verify, async (...args) => {
     await doRequest(args, async(...args) => await usersContainer.HandleUserDelete(...args));
 });
+
+router.post('/intent-reset-password', helper.verify, (req, res) => {
+    let mailOptions = {
+        from: 'ubademy.14@gmail.com',
+        to: req.decoded.email,
+        subject: 'test mail sent',
+        text: 'this is an email to make you know that you are a puto porque leiste'
+    };
+    transporter.sendMail(mailOptions, function(error, info){
+        if (error) {
+            console.log(error);
+            res.status(500).send(error)
+        } else {
+            console.log('Email sent: ' + info.response);
+            res.status(200).send('email sent')
+        }
+    });
+})
 
 module.exports = router;
