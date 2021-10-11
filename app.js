@@ -5,7 +5,9 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var usersRouter = require('./routes/users');
-
+const swaggerUi = require('swagger-ui-express');
+const YAML = require('yamljs');
+const swaggerFile = YAML.load('./docs/swagger.yaml');
 var app = express();
 
 app.use(logger('dev'));
@@ -14,6 +16,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 //Heroku purposes
 app.use(express.static(path.join(__dirname, 'client/build')));
+
+app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 if(process.env.NODE_ENV === 'production') {
     app.use(express.static(path.join(__dirname, 'client/build')));
