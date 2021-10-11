@@ -1,3 +1,4 @@
+const jwt = require('jsonwebtoken');
 class Users {
     constructor(service) {
         this.service = service;
@@ -32,6 +33,16 @@ class Users {
 
     async HandleUserGet(req, res) {
         let email = req.query.email;
+        if (!(email && email !== '')) {
+            let token = req.headers['x-access-token'];
+            let tokenParsed = await jwt.decode(token, {secret: process.env.secret, algorithm: process.env.algorithm});
+            if (!tokenParsed) {
+                let e = new Error('invalid or missing token and email');
+                e.status = 400;
+                throw e;
+            }
+            email = tokenParsed.email;
+        }
         let userInfo = await this.service.GetUser(email);
         if (!(userInfo && userInfo.email)) {
             let e = new Error('user not found');
@@ -76,6 +87,13 @@ class Users {
         };
         await this.service.RemoveUser(information);
         let message = {'message': `${information.email} deleted correctly`, status: 200};
+        res.status(200).json(message);
+    }
+
+    async HandleResendPasswordChange(req, res) {
+        let email = req.query.email;
+        await this.service.SendTokenToRetry(email);
+        let message = {message: 'mail sent successfully', status: 200};
         res.status(200).json(message);
     }
 }

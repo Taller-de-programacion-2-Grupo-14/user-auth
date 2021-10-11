@@ -36,8 +36,12 @@ paths:
       parameters:
         - in: query
           name: email
-          required: true
+          required: false
           example: 'ubademy.14@gmail.com'
+        - in: header
+          name: x-access-token
+          required: false
+          description: token recibido de login, en caso que no este el email va a chequear el token
       responses:
         '200':
           description: User obtenido correctamente
@@ -111,7 +115,7 @@ paths:
           description: Token invalido
         '403':
           description: No token provisto
-  '/users/delete-password':
+  '/users/delete-user':
     'delete':
       tags:
         - User
@@ -137,7 +141,23 @@ paths:
           description: Token invalido
         '403':
           description: No token provisto
-
+  '/users/send-email-reset-password':
+    'post':
+      tags:
+        - User
+      description: Envia mail para recuperar contraseña de usuario existente
+      parameters:
+        - in: query
+          name: email
+          required: true
+          description: email del usuario
+      responses:
+        '200':
+          description: mail enviado correctamente
+        '400':
+          description: Invalid username
+        '503':
+          description: fallo envio de mail
 components:
   schemas:
     userCreate:

@@ -1,8 +1,10 @@
 /*global process*/
 const jwt = require('jsonwebtoken');
+const e = require('express');
 
 class UserService {
-    constructor(db) {
+    constructor(db, sender) {
+        this.sender = sender;
         this.db = db;
     }
 
@@ -71,6 +73,29 @@ class UserService {
         let userInfo = await this.db.GetPrivateUserInfo(information.email);
         this.throwIfInvalidUser(userInfo, information);
         await this.db.DeleteUser(information);
+    }
+
+    async SendTokenToRetry(email) {
+        let userInfo = await this.db.GetUserInfo(email);
+        if (!(userInfo && userInfo.email)) {
+            let e = Error('user not found');
+            e.status = 400;
+            throw e;
+        }
+        const token = jwt.sign({email: email, canChange: true}, process.env.secret, {algorithm: process.env.algorithm, expiresIn: '15m'});
+        let mailOptions = {
+            from: process.env.email,
+            to: email,
+            subject: 'Token de recupero',
+            text: `Por favor poner el siguiente token en la aplicacion movil para recuperar su contraseña:\n ${token}`
+        };
+        await this.sender.sendMail(mailOptions, function(error, info){
+            if (error) {
+                error.status = 503;
+                throw e;
+            }
+            console.log('Email sent: ' + info.response);
+        });
     }
 }
 
