@@ -35,7 +35,7 @@ class Users {
         let userInfo = await this.service.GetUser(email);
         if (!(userInfo && userInfo.email)) {
             let e = new Error('user not found');
-            e.status = 404;
+            e.status = 400;
             throw e;
         }
         res.json(userInfo);
