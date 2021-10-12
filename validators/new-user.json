@@ -31,6 +31,10 @@
     "location": {
       "type": "string",
       "description": "firstname of the account user"
+    },
+    "interest": {
+      "type": "string",
+      "description": "interests of the user"
     }
   },
   "required": ["first_name", "last_name", "email", "role", "password"]

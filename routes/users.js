@@ -82,4 +82,8 @@ router.post('/send-email-reset-password', async (...args) => {
     await doRequest(args, async(...args) => await usersContainer.HandleResendPasswordChange(...args));
 });
 
+router.post('/recreate-password', validateSchema('change-password'), helper.verify, async (...args) => {
+    await doRequest(args, async(...args) => await usersContainer.HandleRecreatePassword(...args));
+});
+
 module.exports = router;

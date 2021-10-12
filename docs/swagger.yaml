@@ -158,6 +158,32 @@ paths:
           description: Invalid username
         '503':
           description: fallo envio de mail
+  '/users/recreate-password':
+    'post':
+      tags:
+        - User
+      description: Modifica password de usuario existente
+      parameters:
+        - in: header
+          name: x-access-token
+          required: true
+          description: token recibido por mail
+      requestBody:
+        description: Body para cambio de contraseña
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/regeneratePassword'
+      responses:
+        '200':
+          description: User modificado correctamente
+        '400':
+          description: New password invalido
+        '401':
+          description: Token invalido
+        '403':
+          description: No token provisto
 components:
   schemas:
     userCreate:
@@ -191,6 +217,9 @@ components:
         location:
           type: string
           example: 'transilvania'
+        interest:
+          type: string
+          example: 'math, poker, drugs'
     userLogin:
       type:
         object
@@ -256,3 +285,9 @@ components:
         password:
           type: string
           example: 'currentPassword'
+    regeneratePassword:
+      type: object
+      properties:
+        newPassword:
+          type: string
+          example: 'newPassword'
