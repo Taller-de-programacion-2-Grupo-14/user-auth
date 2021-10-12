@@ -108,9 +108,9 @@ class Users {
         let information = {
             email: req.decoded.email,
             newPassword: req.body.newPassword
-        }
+        };
         this.service.ChangePassword(information).then(() => res.status(200).json({
-            message: "password modified successfully",
+            message: 'password modified successfully',
             status: 200
         }));
     }
