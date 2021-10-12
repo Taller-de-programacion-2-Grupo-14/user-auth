@@ -1,0 +1,31 @@
+{
+  "title": "User Profile",
+  "description": "Describes the profile of a user",
+  "type": "object",
+  "properties": {
+    "email": {
+      "type": "string",
+      "minLength": 3,
+      "description": "Email of the user"
+    },
+    "first_name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "First name of the user"
+    },
+    "last_name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Last name of the user"
+    },
+    "interest": {
+      "type": "string",
+      "description": "Interests of the user"
+    },
+    "location": {
+      "type": "string",
+      "description": "Location of the user"
+    }
+  },
+  "required": ["email"]
+}

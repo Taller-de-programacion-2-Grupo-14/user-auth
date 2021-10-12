@@ -1,0 +1,258 @@
+openapi: "3.0.0"
+servers:
+  - url: 'https://ubademy-14.herokuapp.com/'
+info:
+  description: User auth tiene la responsabilidad de crear y mantener la informacion del usuario
+  version: 0.2.0
+  title: User auth
+
+tags:
+  - name: User
+    description: Operaciones sobre usuarios
+
+paths:
+  '/users':
+    'post':
+      tags:
+        - User
+      description:
+        Genera usuario nuevo
+      requestBody:
+        description: body para la creacion de usuario
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/userCreate'
+      responses:
+        '200':
+          description: User creado correctamente
+        '400':
+          description: Bad Request
+    'get':
+      tags:
+        - User
+      description: Obtiene la informacion de un usuario
+      parameters:
+        - in: query
+          name: email
+          required: false
+          example: 'ubademy.14@gmail.com'
+        - in: header
+          name: x-access-token
+          required: false
+          description: token recibido de login, en caso que no este el email va a chequear el token
+      responses:
+        '200':
+          description: User obtenido correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userRetrieved'
+        '400':
+          description: No se encontro al usuario
+    'patch':
+      tags:
+        - User
+      description:
+        Modifica usuario existente
+      requestBody:
+        description: Body para el patch del usuario, el email es obligatorio
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/userRetrieved'
+      responses:
+        '200':
+          description: User creado correctamente
+        '400':
+          description: Bad Request
+  '/users/login':
+    'post':
+      tags:
+        - User
+      description: Modifica a usuario existente
+      requestBody:
+        description: Body para el login del usuario
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/userLogin'
+      responses:
+        '200':
+          description: User modificado correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/loginSuccessful'
+        '400':
+          description: Invalid username or password
+  '/users/change-password':
+    'patch':
+      tags:
+        - User
+      description: Modifica password de usuario existente
+      parameters:
+        - in: header
+          name: x-access-token
+          required: true
+          description: token recibido de login
+      requestBody:
+        description: Body para cambio de contraseña
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/changePassword'
+      responses:
+        '200':
+          description: User modificado correctamente
+        '400':
+          description: Invalid username or password
+        '401':
+          description: Token invalido
+        '403':
+          description: No token provisto
+  '/users/delete-user':
+    'delete':
+      tags:
+        - User
+      description: Elimina usuario existente
+      parameters:
+        - in: header
+          name: x-access-token
+          required: true
+          description: token recibido de login
+      requestBody:
+        description: Body para eliminar usuario
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/deleteUser'
+      responses:
+        '200':
+          description: User eliminado correctamente
+        '400':
+          description: Invalid username or password
+        '401':
+          description: Token invalido
+        '403':
+          description: No token provisto
+  '/users/send-email-reset-password':
+    'post':
+      tags:
+        - User
+      description: Envia mail para recuperar contraseña de usuario existente
+      parameters:
+        - in: query
+          name: email
+          required: true
+          description: email del usuario
+      responses:
+        '200':
+          description: mail enviado correctamente
+        '400':
+          description: Invalid username
+        '503':
+          description: fallo envio de mail
+components:
+  schemas:
+    userCreate:
+      type: object
+      required:
+        - first_name
+        - last_name
+        - email
+        - role
+        - password
+      properties:
+        first_name:
+          type: string
+          example: 'pepe'
+        last_name:
+          type: 'string'
+          example: pepardo
+        role:
+          type: string
+          enum:
+            - Student
+            - Collaborator
+            - Creator
+        password:
+          type: 'string'
+          example: '0303456Branca'
+
+        email:
+          type: string
+          example: 'ubademy.14@gmail.com'
+        location:
+          type: string
+          example: 'transilvania'
+    userLogin:
+      type:
+        object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          example: 'ubademy.14@gmail.com'
+        password:
+          type: string
+          example: '0303456Branca'
+
+    loginSuccessful:
+      type: object
+      properties:
+        token:
+          type: string
+          description: token to be used on future request
+        message:
+          type: string
+          example: 'user ubdaemy.14@gmail.com is logged correctly'
+        status:
+          type: integer
+          example: 200
+    userRetrieved:
+      type: object
+      properties:
+        user_id:
+          type: integer
+          example: 3
+        first_name:
+          type: string
+          example: 'pepe'
+        last_name:
+          type: 'string'
+          example: pepardo
+        role:
+          type: string
+          example: 'Student'
+        interest:
+          type: string
+          example: 'merca'
+        email:
+          type: string
+          example: 'ubademy.14@gmail.com'
+        location:
+          type: string
+          example: 'transilvania'
+    changePassword:
+      type: object
+      properties:
+        password:
+          type: string
+          example: 'oldPassword'
+        newPassword:
+          type: string
+          example: 'newPassword'
+    deleteUser:
+      type: object
+      properties:
+        password:
+          type: string
+          example: 'currentPassword'

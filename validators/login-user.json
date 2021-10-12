@@ -3,9 +3,9 @@
   "description": "describes properties required to login a user",
   "type": "object",
   "properties": {
-    "username": {
+    "email": {
       "type": "string",
-      "description": "username of account"
+      "description": "Email of the user account"
     },
     "password": {
       "type": "string",
@@ -13,5 +13,5 @@
       "description": "password of the account user"
     }
   },
-  "required": ["username", "password"]
+  "required": ["email", "password"]
 }

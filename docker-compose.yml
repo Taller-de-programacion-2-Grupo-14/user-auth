@@ -24,6 +24,8 @@ services:
     container_name: node
     environment:
       - DB_URL=postgres://postgres:postgres@pg:5432/test_db
+      - email=ubademy.14@gmail.com
+      - pswd=Brancahdp123
     ports:
       - "8080:8080"
     depends_on:
