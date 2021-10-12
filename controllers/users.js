@@ -1,5 +1,6 @@
 /*global process*/
 const jwt = require('jsonwebtoken');
+
 class Users {
     constructor(service) {
         this.service = service;
@@ -72,7 +73,7 @@ class Users {
         let information = {
             email: req.decoded.email,
             role: req.decoded.role,
-            password: req.body.password,
+            password: req.body.password || '',
             newPassword: req.body.newPassword
         };
         await this.service.UpdateUserPassword(information);
@@ -96,6 +97,22 @@ class Users {
         await this.service.SendTokenToRetry(email);
         let message = {message: 'mail sent successfully', status: 200};
         res.status(200).json(message);
+    }
+
+    async HandleRecreatePassword(req, res) {
+        if (!req.decoded.canChange) {
+            let e = new Error('invalid token');
+            e.status = 400;
+            throw e;
+        }
+        let information = {
+            email: req.decoded.email,
+            newPassword: req.body.newPassword
+        }
+        this.service.ChangePassword(information).then(() => res.status(200).json({
+            message: "password modified successfully",
+            status: 200
+        }));
     }
 }
 

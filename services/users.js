@@ -97,6 +97,10 @@ class UserService {
             console.log('Email sent: ' + info.response);
         });
     }
+
+    async ChangePassword(information) {
+        await this.db.UpdateUserRegistry(information);
+    }
 }
 
 module.exports = UserService;
