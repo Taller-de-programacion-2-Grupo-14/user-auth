@@ -91,7 +91,9 @@ class UserService {
         };
         await this.sender.sendMail(mailOptions, function(error, info){
             if (error) {
-                error.status = 503;
+                console.log(error);
+                let e = Error('could not send email');
+                e.status = 503;
                 throw e;
             }
             console.log('Email sent: ' + info.response);
