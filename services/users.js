@@ -1,6 +1,5 @@
 /*global process*/
 const jwt = require('jsonwebtoken');
-const e = require('express');
 
 class UserService {
     constructor(db, sender) {
