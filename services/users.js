@@ -38,8 +38,8 @@ class UserService {
         return jwt.sign(relevantInfo, process.env.secret, {algorithm: process.env.algorithm, expiresIn: '2h'});
     }
 
-    throwIfInvalidUser(user, values) {
-        if (!(user && user.email) || (values.email !== user.email || values.password !== user.password)) {
+    throwIfInvalidUser(user, values, checkPassword=true) {
+        if (!(user && user.email) || (checkPassword && (values.email !== user.email || values.password !== user.password))) {
             let e = new Error('wrong username or password');
             e.status = 400;
             throw e;
@@ -71,7 +71,7 @@ class UserService {
 
     async RemoveUser(information) {
         let userInfo = await this.db.GetPrivateUserInfo(information.email);
-        this.throwIfInvalidUser(userInfo, information);
+        this.throwIfInvalidUser(userInfo, information, false);
         await this.db.DeleteUser(information);
     }
 

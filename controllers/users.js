@@ -84,8 +84,7 @@ class Users {
     async HandleUserDelete(req, res) {
         let information = {
             email: req.decoded.email,
-            role: req.decoded.role,
-            password: req.body.password
+            role: req.decoded.role
         };
         await this.service.RemoveUser(information);
         let message = {'message': `${information.email} deleted correctly`, status: 200};
