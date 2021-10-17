@@ -8,7 +8,8 @@
     "lint:js": "eslint '**/*.js' --ignore-pattern node\\_modules/",
     "lint:js:fix": "eslint '**/*.js' --ignore-pattern node\\_modules/ --fix",
     "lint": "npm run lint:js",
-    "format": "npm run lint:js:fix"
+    "format": "npm run lint:js:fix",
+    "coverage": "jest && codecov"
   },
   "dependencies": {
     "ajv": "^8.6.3",
@@ -22,6 +23,15 @@
     "morgan": "~1.9.1",
     "pg": "^8.7.1",
     "swagger-ui-express": "^4.1.6"
+  },
+  "jest": {
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "persistence/*.{js,jsx}",
+      "routes/*.{js,jsx}",
+      "services/*.{js,jsx}",
+      "controllers/*.{js,jsx}"
+    ]
   },
   "devDependencies": {
     "codecov": "^3.8.3",
