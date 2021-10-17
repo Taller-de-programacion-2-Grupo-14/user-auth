@@ -9,6 +9,7 @@
     "lint:js:fix": "eslint '**/*.js' --ignore-pattern node\\_modules/ --fix",
     "lint": "npm run lint:js",
     "format": "npm run lint:js:fix",
+    "report-test": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
     "coverage": "nyc npm run test"
   },
   "dependencies": {
