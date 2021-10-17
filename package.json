@@ -24,6 +24,7 @@
     "swagger-ui-express": "^4.1.6"
   },
   "devDependencies": {
+    "codecov": "^3.8.3",
     "eslint": "^8.0.0",
     "express-json-validator-middleware": "^2.2.1",
     "nodemailer": "^6.6.5",
