@@ -5,6 +5,5 @@ before_install:
   - npm install -g codecov
 script:
   - npm run test
-  - npm run report-test
 after_success:
   - bash <(curl -s https://codecov.io/bash)
