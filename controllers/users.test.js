@@ -1,13 +1,15 @@
 const Users = require('../controllers/users');
-const jwt = require("jsonwebtoken");
 const FAKE_EMAIL = 'fake@gmail.com';
 const FAKE_PASSWORD = 'fakePWD';
 const FAKE_NAME = 'Fulano';
 const ROLE = 'STUDENT';
 const SUCCESS = 1;
 /*global describe jest test expect beforeAll*/
-describe('controller.js tests', ()=> {
-
+describe('controller.js tests', () => {
+    let mockService = {AddUser: jest.fn()};
+    beforeAll(() => {
+        mockService.AddUser = jest.fn();
+    });
     test('Controller won\'t throw error if service okay', async () => {
         let mockService = {AddUser: jest.fn()};
         mockService.AddUser.mockReturnValueOnce(SUCCESS);
@@ -76,21 +78,21 @@ describe('controller.js tests', ()=> {
     });
 
     test('User can change password correctly', async () => {
-       let mockService = {UpdateUserPassword: jest.fn()};
-       mockService.UpdateUserPassword.mockReturnValueOnce(SUCCESS);
-       let res = {json: jest.fn(), status: jest.fn()};
-       let controller = new Users(mockService);
-       await controller.HandleUserChangePassword({
-           decoded: {email: FAKE_EMAIL, role: ROLE},
-           body: {password: FAKE_PASSWORD, newPassword: FAKE_PASSWORD + '2'}
-       }, res);
-       expect(mockService.UpdateUserPassword.mock.calls.length).toBe(1);
-       expect(mockService.UpdateUserPassword.mock.calls[0][0].email).toBe(FAKE_EMAIL);
-       expect(mockService.UpdateUserPassword.mock.calls[0][0].role).toBe(ROLE);
-       expect(mockService.UpdateUserPassword.mock.calls[0][0].password).toBe(FAKE_PASSWORD);
-       expect(mockService.UpdateUserPassword.mock.calls[0][0].newPassword).toBe(FAKE_PASSWORD + '2');
-       expect(res.status.mock.calls[0][0]).toBe(200);
-       expect(res.json.mock.calls[0][0].status).toBe(200);
+        let mockService = {UpdateUserPassword: jest.fn()};
+        mockService.UpdateUserPassword.mockReturnValueOnce(SUCCESS);
+        let res = {json: jest.fn(), status: jest.fn()};
+        let controller = new Users(mockService);
+        await controller.HandleUserChangePassword({
+            decoded: {email: FAKE_EMAIL, role: ROLE},
+            body: {password: FAKE_PASSWORD, newPassword: FAKE_PASSWORD + '2'}
+        }, res);
+        expect(mockService.UpdateUserPassword.mock.calls.length).toBe(1);
+        expect(mockService.UpdateUserPassword.mock.calls[0][0].email).toBe(FAKE_EMAIL);
+        expect(mockService.UpdateUserPassword.mock.calls[0][0].role).toBe(ROLE);
+        expect(mockService.UpdateUserPassword.mock.calls[0][0].password).toBe(FAKE_PASSWORD);
+        expect(mockService.UpdateUserPassword.mock.calls[0][0].newPassword).toBe(FAKE_PASSWORD + '2');
+        expect(res.status.mock.calls[0][0]).toBe(200);
+        expect(res.json.mock.calls[0][0].status).toBe(200);
     });
 
     test('User can be delete', async () => {
@@ -133,6 +135,6 @@ describe('controller.js tests', ()=> {
             result.status = 400;
         }
         expect(result.status).toBe(400);
-        expect(result.passed).toBe(true)
+        expect(result.passed).toBe(true);
     });
 });

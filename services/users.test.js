@@ -1,11 +1,15 @@
 const UserService = require('../services/users');
-const jwt = require("jsonwebtoken");
 const FAKE_EMAIL = 'fake@gmail.com';
 const FAKE_PASSWORD = 'fakePWD';
 const FAKE_NAME = 'Fulano';
 const FAKE_ID = 69; // ;)
+/*global describe jest test expect beforeAll*/
+describe('services.js tests', () => {
+    let mockService = {AddUser: jest.fn()};
+    beforeAll(() => {
+        mockService.AddUser = jest.fn();
+    });
 
-describe('services.js tests', ()=> {
     test('User is added correctly', async () => {
         let mockDB = {GetPrivateUserInfo: jest.fn(), AddUser: jest.fn(), AddUserProfile: jest.fn()};
         mockDB.GetPrivateUserInfo.mockReturnValueOnce(null).mockReturnValueOnce({id: FAKE_ID});
