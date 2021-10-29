@@ -1,0 +1,4 @@
+ignore:
+  - "validators"
+  - "docs"
+  - "docker"
