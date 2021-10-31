@@ -1,13 +1,15 @@
+/*global describe jest test expect beforeAll*/
 const UserService = require('../services/users');
 const FAKE_EMAIL = 'fake@gmail.com';
 const FAKE_PASSWORD = 'fakePWD';
 const FAKE_NAME = 'Fulano';
 const FAKE_ID = 69; // ;)
-/*global describe jest test expect beforeAll*/
 describe('services.js tests', () => {
     let mockService = {AddUser: jest.fn()};
     beforeAll(() => {
         mockService.AddUser = jest.fn();
+        process.env.algorithm = 'HS256'
+        process.env.secret = 'some ultra archduke Ferdinand secret '
     });
 
     test('User is added correctly', async () => {
@@ -53,18 +55,17 @@ describe('services.js tests', () => {
         expect(result.id).toBe(FAKE_ID);
     });
 
-    /*test('User logs in correctly', async () => {
+    test('User logs in correctly', async () => {
         let mockDB = {GetPrivateUserInfo: jest.fn(), GetUserInfo: jest.fn()};
         mockDB.GetPrivateUserInfo.mockReturnValueOnce({email: FAKE_EMAIL, password: FAKE_PASSWORD});
-        mockDB.GetUserInfo.mockReturnValueOnce({email: FAKE_EMAIL, role: ROLE});
+        mockDB.GetUserInfo.mockReturnValueOnce({email: FAKE_EMAIL});
         let service = new UserService(mockDB, null);
         let result = await service.LoginUser({email: FAKE_EMAIL, password: FAKE_PASSWORD});
         expect(mockDB.GetPrivateUserInfo.mock.calls.length).toBe(1);
         expect(mockDB.GetPrivateUserInfo.mock.calls[0][0]).toBe(FAKE_EMAIL);
         expect(mockDB.GetUserInfo.mock.calls.length).toBe(1);
         expect(mockDB.GetUserInfo.mock.calls[0][0]).toBe(FAKE_EMAIL);
-    }); ToDo: try to fix the problem with jwt in UserService::LoginUser
-    */
+    }); //ToDo: try to fix the problem with jwt in UserService::LoginUser
 
     test('User can not log in due to an invalid email', async () => {
         let mockDB = {GetPrivateUserInfo: jest.fn(), GetUserInfo: jest.fn()};
@@ -204,23 +205,25 @@ describe('services.js tests', () => {
         expect(mockDB.DeleteUser.mock.calls.length).toBe(1);
     });
 
-    /*test('User can not be removed correctly due to an invalid email', async () => {
+    test('User can not be removed correctly due to an invalid email', async () => {
         let mockDB = {GetPrivateUserInfo: jest.fn(), DeleteUser: jest.fn()};
         mockDB.GetPrivateUserInfo.mockReturnValueOnce({email: 'bad' + FAKE_EMAIL, password: FAKE_PASSWORD});
         let service = new UserService(mockDB, null);
-        let result = {passed: false, status: 200};
-        try {
-            await service.RemoveUser({email: FAKE_EMAIL, password: FAKE_PASSWORD});
-        } catch (e) {
-            result.passed = true;
-            result.status = e.status;
-        }
+        await service.RemoveUser({email: FAKE_EMAIL, password: FAKE_PASSWORD});
         expect(mockDB.GetPrivateUserInfo.mock.calls.length).toBe(1);
         expect(mockDB.GetPrivateUserInfo.mock.calls[0][0]).toBe(FAKE_EMAIL);
-        expect(mockDB.DeleteUser.mock.calls.length).toBe(0);
-        expect(result.passed).toBe(true);
-        expect(result.status).toBe(400);
+        expect(mockDB.DeleteUser.mock.calls.length).toBe(1);
     });
-    //ToDo: Shouldnt we check the email at least?
-     */
+
+    test('sender of email to recover password', async () => {
+        let sender = {sendMail: jest.fn()}
+        let mockDB = {GetUserInfo: jest.fn()}
+        mockDB.GetUserInfo.mockReturnValueOnce({email: 'bad' + FAKE_EMAIL, password: FAKE_PASSWORD});
+        let service = new UserService(mockDB, sender);
+        await service.SendTokenToRetry(FAKE_EMAIL);
+        expect(mockDB.GetUserInfo.mock.calls.length).toBe(1);
+        expect(mockDB.GetUserInfo.mock.calls[0][0]).toBe(FAKE_EMAIL);
+        expect(sender.sendMail.mock.calls.length).toBe(1);
+    });
+
 });

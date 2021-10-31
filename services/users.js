@@ -77,11 +77,7 @@ class UserService {
 
     async SendTokenToRetry(email) {
         let userInfo = await this.db.GetUserInfo(email);
-        if (!(userInfo && userInfo.email)) {
-            let e = Error('user not found');
-            e.status = 400;
-            throw e;
-        }
+        this.throwIfInvalidUser(userInfo, email, false);
         const token = jwt.sign({email: email, canChange: true}, process.env.secret, {algorithm: process.env.algorithm, expiresIn: '15m'});
         let mailOptions = {
             from: process.env.email,
