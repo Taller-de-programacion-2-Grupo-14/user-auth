@@ -55,12 +55,12 @@ class PG {
 
     async AddUserProfile(userInfo) {
         const query = `INSERT INTO profile_user
-                           (user_id, email, first_name, last_name, role, interest, location)
+                           (user_id, email, first_name, last_name, photo_url, interest, location)
                        VALUES ('${userInfo.id}',
                                '${userInfo.email}',
                                '${userInfo.firstName}',
                                '${userInfo.lastName}',
-                               '${userInfo.userType}',
+                               '${userInfo.photoURL}',
                                '${userInfo.interest}',
                                '${userInfo.location}')`;
         const client = this.client;
@@ -80,7 +80,8 @@ class PG {
                        SET first_name = '${userInfo.firstName}',
                            last_name  = '${userInfo.lastName}',
                            interest   = '${userInfo.interest}',
-                           location   = '${userInfo.location}'
+                           location   = '${userInfo.location}',
+                           photo_url  = '${userInfo.photoURL}'
                        WHERE email = '${userInfo.email}'`;
         const client = this.client;
         return await new Promise((resolve) => {
@@ -112,7 +113,9 @@ class PG {
     }
 
     async DeleteUser(information) {
-        const query = `delete from user_registry where email = '${information.email}'`;
+        const query = `delete
+                       from user_registry
+                       where email = '${information.email}'`;
         const client = this.client;
         await new Promise((resolve) => {
             client.query(query, (err) => {
