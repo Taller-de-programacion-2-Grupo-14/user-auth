@@ -2,3 +2,17 @@ ignore:
   - "validators"
   - "docs"
   - "docker"
+  - "routes"
+  - "persistence"
+  - "bin"
+
+coverage:
+  status:
+    project:
+      default:
+        # basic
+        target: auto
+        threshold: 70%
+        # advanced settings
+        branches:
+          - master
