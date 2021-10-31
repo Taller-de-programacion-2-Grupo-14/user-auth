@@ -1,4 +1,4 @@
-/*global describe jest test expect beforeAll*/
+/*global describe jest test expect beforeAll process*/
 const UserService = require('../services/users');
 const FAKE_EMAIL = 'fake@gmail.com';
 const FAKE_PASSWORD = 'fakePWD';
@@ -8,8 +8,8 @@ describe('services.js tests', () => {
     let mockService = {AddUser: jest.fn()};
     beforeAll(() => {
         mockService.AddUser = jest.fn();
-        process.env.algorithm = 'HS256'
-        process.env.secret = 'some ultra archduke Ferdinand secret '
+        process.env.algorithm = 'HS256';
+        process.env.secret = 'some ultra archduke Ferdinand secret ';
     });
 
     test('User is added correctly', async () => {
@@ -60,12 +60,12 @@ describe('services.js tests', () => {
         mockDB.GetPrivateUserInfo.mockReturnValueOnce({email: FAKE_EMAIL, password: FAKE_PASSWORD});
         mockDB.GetUserInfo.mockReturnValueOnce({email: FAKE_EMAIL});
         let service = new UserService(mockDB, null);
-        let result = await service.LoginUser({email: FAKE_EMAIL, password: FAKE_PASSWORD});
+        await service.LoginUser({email: FAKE_EMAIL, password: FAKE_PASSWORD});
         expect(mockDB.GetPrivateUserInfo.mock.calls.length).toBe(1);
         expect(mockDB.GetPrivateUserInfo.mock.calls[0][0]).toBe(FAKE_EMAIL);
         expect(mockDB.GetUserInfo.mock.calls.length).toBe(1);
         expect(mockDB.GetUserInfo.mock.calls[0][0]).toBe(FAKE_EMAIL);
-    }); //ToDo: try to fix the problem with jwt in UserService::LoginUser
+    });
 
     test('User can not log in due to an invalid email', async () => {
         let mockDB = {GetPrivateUserInfo: jest.fn(), GetUserInfo: jest.fn()};
@@ -216,8 +216,8 @@ describe('services.js tests', () => {
     });
 
     test('sender of email to recover password', async () => {
-        let sender = {sendMail: jest.fn()}
-        let mockDB = {GetUserInfo: jest.fn()}
+        let sender = {sendMail: jest.fn()};
+        let mockDB = {GetUserInfo: jest.fn()};
         mockDB.GetUserInfo.mockReturnValueOnce({email: 'bad' + FAKE_EMAIL, password: FAKE_PASSWORD});
         let service = new UserService(mockDB, sender);
         await service.SendTokenToRetry(FAKE_EMAIL);
