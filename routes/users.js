@@ -46,7 +46,7 @@ let db = new persistence(client);
 /* GET users listing. */
 let userService = new UserService(db, transporter);
 let usersContainer = new Users(userService);
-let firebase = new Firebase(db)
+let firebase = new Firebase(db);
 router.post('/', validateSchema('new-user'), async (...args) => {
     await doRequest(args, async(...args) => await usersContainer.HandleUserPost(...args));
 });
@@ -94,7 +94,7 @@ router.post('/login/firebase', async (req, res, next) => {
         if (shouldRegisterUser) {
             await usersContainer.HandleUserPost(req, res);
         }
-        next()
+        next();
     } catch (e) {
         console.log(e);
         errorHandler(e, req, res, next);

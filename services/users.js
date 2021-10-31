@@ -92,7 +92,7 @@ class UserService {
         await this.sender.sendMail(mailOptions, function(error, info){
             if (error) {
                 let e = Error('could not send email');
-                console.log(error, e)
+                console.log(error, e);
             }
             console.log('Email sent: ' + info.response);
         });

@@ -6,9 +6,9 @@ class Firebase {
     async ProcessFirebaseInfoNecessary(req) {
         let fullName = req.body.displayName.split(' ');
         const name = fullName.shift();
-        const lastName = fullName.join(" ");
+        const lastName = fullName.join(' ');
         const email = req.body.email;
-        const password = fullName.join('') + email
+        const password = fullName.join('') + email;
         let values = {
             email: req.body.email,
             photoURL: req.body.photoURL,
@@ -22,8 +22,8 @@ class Firebase {
             values[password] = response.password;
         }
         req.body = values;
-        return !Boolean(response)
+        return !response;
     }
 }
 
-module.exports = Firebase
+module.exports = Firebase;
