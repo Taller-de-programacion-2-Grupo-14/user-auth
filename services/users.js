@@ -32,7 +32,7 @@ class UserService {
         let userInfo = await this.db.GetUserInfo(values.email);
         let relevantInfo = {
             email: userInfo.email,
-            role: userInfo.role
+            id: userInfo.id
         };
         return jwt.sign(relevantInfo, process.env.secret, {algorithm: process.env.algorithm, expiresIn: '2h'});
     }
@@ -57,7 +57,8 @@ class UserService {
             lastName: userInfo.lastName || user.last_name,
             interest: userInfo.interest || user.interest,
             location: userInfo.location || user.location,
-            email: userInfo.email
+            email: userInfo.email,
+            photoURL: userInfo.photoURL || user.photoURL
         };
         await this.db.UpdateUserProfile(values);
     }
@@ -90,10 +91,8 @@ class UserService {
         };
         await this.sender.sendMail(mailOptions, function(error, info){
             if (error) {
-                console.log(error);
                 let e = Error('could not send email');
-                e.status = 503;
-                throw e;
+                console.log(error, e);
             }
             console.log('Email sent: ' + info.response);
         });

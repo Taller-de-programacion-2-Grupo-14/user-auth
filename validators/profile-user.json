@@ -25,6 +25,10 @@
     "location": {
       "type": "string",
       "description": "Location of the user"
+    },
+    "photoURL": {
+      "type": "string",
+      "description": "Link to the profile picture of the user"
     }
   },
   "required": ["email"]

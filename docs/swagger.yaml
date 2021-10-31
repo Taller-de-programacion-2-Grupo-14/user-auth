@@ -184,6 +184,30 @@ paths:
           description: Token invalido
         '403':
           description: No token provisto
+  '/users/login/firebase':
+    'post':
+      tags:
+        - User
+      description: Termina el login por parte de usuarios usando firebase
+      requestBody:
+        description: Body obtenido de firebase
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/firebase'
+      responses:
+        '200':
+          description: User loggeado correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/loginSuccessful'
+        '400':
+          description: Datos de usuario invalidos
+        '503':
+          description: Error desconocido
+
 components:
   schemas:
     userCreate:
@@ -192,25 +216,17 @@ components:
         - first_name
         - last_name
         - email
-        - role
         - password
       properties:
         first_name:
           type: string
           example: 'pepe'
         last_name:
-          type: 'string'
-          example: pepardo
-        role:
           type: string
-          enum:
-            - Student
-            - Collaborator
-            - Creator
+          example: pepardo
         password:
-          type: 'string'
+          type: string
           example: '0303456Branca'
-
         email:
           type: string
           example: 'ubademy.14@gmail.com'
@@ -270,6 +286,9 @@ components:
         location:
           type: string
           example: 'transilvania'
+        photo_url:
+          type: string
+          description: URL de la foto del usuario
     changePassword:
       type: object
       properties:
@@ -291,3 +310,24 @@ components:
         newPassword:
           type: string
           example: 'newPassword'
+    firebase:
+      type: object
+      required: true
+      properties:
+        user:
+          type: object
+          required: true
+          properties:
+            displayName:
+              type: string
+              required: true
+              description: Nombre del usuario escrito de manera "Nombre Apellido"
+              example: Branca Algunos Apellidos
+            email:
+              required: true
+              type: string
+              description: email del usuario
+              example: ubdaemy.14@gmail.com
+            photoURL:
+              type: string
+              description: URL de la foto del usuario

@@ -4,6 +4,7 @@ let router = express.Router();
 const {validateSchema} = require('../validators/middlewareValidator');
 const UserService = require('../services/users');
 const Users = require('../controllers/users');
+const Firebase = require('../controllers/firebase');
 const persistence = require('../persistence/postgre');
 const helper = require('./helper');
 require('jsonwebtoken');
@@ -41,10 +42,11 @@ function errorHandler(err, req, res) {
     res.json(errBody);
 
 }
-
+let db = new persistence(client);
 /* GET users listing. */
-let userService = new UserService(new persistence(client), transporter);
+let userService = new UserService(db, transporter);
 let usersContainer = new Users(userService);
+let firebase = new Firebase(db);
 router.post('/', validateSchema('new-user'), async (...args) => {
     await doRequest(args, async(...args) => await usersContainer.HandleUserPost(...args));
 });
@@ -84,6 +86,21 @@ router.post('/send-email-reset-password', async (...args) => {
 
 router.post('/recreate-password', validateSchema('change-password'), helper.verify, async (...args) => {
     await doRequest(args, async(...args) => await usersContainer.HandleRecreatePassword(...args));
+});
+
+router.post('/login/firebase', async (req, res, next) => {
+    try {
+        let shouldRegisterUser = await firebase.ProcessFirebaseInfoNecessary(req);
+        if (shouldRegisterUser) {
+            await usersContainer.HandleUserPost(req, res);
+        }
+        next();
+    } catch (e) {
+        console.log(e);
+        errorHandler(e, req, res, next);
+    }
+}, async (...args) => {
+    await doRequest(args, async(...args) => await usersContainer.HandleUserLogin(...args));
 });
 
 module.exports = router;

@@ -10,11 +10,11 @@ class Users {
         let values = {
             email: req.body.email,
             password: req.body.password,
-            userType: req.body.role,
             firstName: req.body.first_name || '',
             lastName: req.body.last_name || '',
             interest: req.body.interest || '',
-            location: req.body.location || ''
+            location: req.body.location || '',
+            photoURL: req.body.photoURL || ''
         };
         await this.service.AddUser(values);
         res.status(200);
@@ -60,7 +60,8 @@ class Users {
             location: req.body.location,
             firstName: req.body.first_name,
             lastName: req.body.last_name,
-            interest: req.body.interest
+            interest: req.body.interest,
+            photoURL: req.body.photoURL
         };
         await this.service.ModifyUserInfo(values);
         const status = 200;
