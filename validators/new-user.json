@@ -18,10 +18,9 @@
       "description": "username of account",
       "minLength": 3
     },
-    "role": {
+    "photoURL": {
       "type": "string",
-      "description": "User role",
-      "enum": ["Student", "Collaborator", "Creator"]
+      "description": "Link to the profile picture of the user"
     },
     "password": {
       "type": "string",
@@ -37,5 +36,5 @@
       "description": "interests of the user"
     }
   },
-  "required": ["first_name", "last_name", "email", "role", "password"]
+  "required": ["first_name", "last_name", "email", "password"]
 }

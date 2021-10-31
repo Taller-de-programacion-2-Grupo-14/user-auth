@@ -40,7 +40,7 @@ function createTableProfile(client) {
                        email      varchar(255),
                        first_name varchar(100) NOT NULL,
                        last_name  varchar(100) NOT NULL,
-                       role       varchar(20) CHECK (role IN ('Student', 'Collaborator', 'Creator')),
+                       photo_url  varchar(255),
                        interest   varchar(255),
                        location   varchar(255),
                        PRIMARY KEY (user_id),

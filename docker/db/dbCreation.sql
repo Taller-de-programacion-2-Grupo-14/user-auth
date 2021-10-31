@@ -12,12 +12,12 @@ CREATE INDEX emailIndex
 
 CREATE TABLE profile_user
 (
-    user_id    int            NOT NULL,
+    user_id    int          NOT NULL,
     email      varchar(255),
     first_name varchar(100) NOT NULL,
     last_name  varchar(100) NOT NULL,
-    role  varchar(20) CHECK (role IN ('Student', 'Collaborator', 'Creator')),
     interest   varchar(255),
+    photo_url   varchar(255),
     location   varchar(255),
     PRIMARY KEY (user_id),
     FOREIGN KEY (user_id) REFERENCES user_registry (id) ON DELETE CASCADE,
