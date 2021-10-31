@@ -79,7 +79,8 @@ class Users {
         };
         await this.service.UpdateUserPassword(information);
         let message = {'message': `${information.email} password updated correctly`, status: 200};
-        res.status(200).json(message);
+        res.status(200);
+        res.json(message);
     }
 
     async HandleUserDelete(req, res) {
@@ -89,14 +90,16 @@ class Users {
         };
         await this.service.RemoveUser(information);
         let message = {'message': `${information.email} deleted correctly`, status: 200};
-        res.status(200).json(message);
+        res.status(200);
+        res.json(message);
     }
 
     async HandleResendPasswordChange(req, res) {
         let email = req.query.email;
         await this.service.SendTokenToRetry(email);
         let message = {message: 'mail sent successfully', status: 200};
-        res.status(200).json(message);
+        res.status(200);
+        res.json(message);
     }
 
     async HandleRecreatePassword(req, res) {
