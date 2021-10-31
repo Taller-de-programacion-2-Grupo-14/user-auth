@@ -27,8 +27,6 @@
   "jest": {
     "collectCoverage": true,
     "collectCoverageFrom": [
-      "persistence/*.{js,jsx}",
-      "routes/*.{js,jsx}",
       "services/*.{js,jsx}",
       "controllers/*.{js,jsx}"
     ]
