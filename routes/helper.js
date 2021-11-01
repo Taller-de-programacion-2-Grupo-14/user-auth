@@ -105,7 +105,12 @@ function verify(req, res, next) {
     }
 }
 
+function getNullRes() {
+    return {json: (v)=>console.log(`message ${v} was skipped`), status: ()=>{}};
+}
+
 module.exports = {
     createTableIfNeeded: createTableIfNeeded,
-    verify: verify
+    verify: verify,
+    getNullRes: getNullRes
 };
