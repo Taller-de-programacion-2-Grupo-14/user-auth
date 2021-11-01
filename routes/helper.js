@@ -106,7 +106,7 @@ function verify(req, res, next) {
 }
 
 function getNullRes() {
-    return {json: (v)=>console.log(`message ${v} was skipped`), status: (s)=>{}}
+    return {json: (v)=>console.log(`message ${v} was skipped`), status: (s)=>{}};
 }
 
 module.exports = {

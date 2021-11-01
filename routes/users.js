@@ -92,7 +92,7 @@ router.post('/login/firebase', async (req, res, next) => {
     try {
         let shouldRegisterUser = await firebase.ProcessFirebaseInfoNecessary(req);
         if (shouldRegisterUser) {
-            let copyRes = helper.getNullRes()
+            let copyRes = helper.getNullRes();
             await usersContainer.HandleUserPost(req, copyRes);
         }
         next();
