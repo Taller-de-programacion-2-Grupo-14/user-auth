@@ -40,8 +40,8 @@ function errorHandler(err, req, res) {
     let errBody = {error: err.message, status: err.status};
     res.status(err.status || 500);
     res.json(errBody);
-
 }
+
 let db = new persistence(client);
 /* GET users listing. */
 let userService = new UserService(db, transporter);
@@ -92,7 +92,8 @@ router.post('/login/firebase', async (req, res, next) => {
     try {
         let shouldRegisterUser = await firebase.ProcessFirebaseInfoNecessary(req);
         if (shouldRegisterUser) {
-            await usersContainer.HandleUserPost(req, res);
+            let copyRes = helper.getNullRes()
+            await usersContainer.HandleUserPost(req, copyRes);
         }
         next();
     } catch (e) {
