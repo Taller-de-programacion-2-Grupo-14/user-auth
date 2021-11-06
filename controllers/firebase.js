@@ -1,9 +1,15 @@
+/* global process*/
 class Firebase {
     constructor(db) {
         this.db = db;
     }
 
     async ProcessFirebaseInfoNecessary(req) {
+        if (!(req.body.apiKey === process.env.FIREBASE_USER_KEY && req.body.authDomain === process.env.FIREBASE_DOMAIN)) {
+            let e = new Error('invalid firebase settings set');
+            e.status = 503;
+            throw e;
+        }
         let fullName = req.body.displayName.split(' ');
         const name = fullName.shift();
         const lastName = fullName.join(' ');
@@ -19,7 +25,7 @@ class Firebase {
         };
         let response = await this.db.GetPrivateUserInfo(email);
         if (response) {
-            values[password] = response.password;
+            values.password = response.password;
         }
         req.body = values;
         return !response;
