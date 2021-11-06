@@ -4,8 +4,8 @@ describe('firebase.js tests', () => {
     let mockDB = {GetPrivateUserInfo: jest.fn()};
     beforeEach(() => {
         mockDB = {GetPrivateUserInfo: jest.fn()};
-        process.env.FIREBASE_DOMAIN = "a";
-        process.env.FIREBASE_USER_KEY = "a";
+        process.env.FIREBASE_DOMAIN = 'a';
+        process.env.FIREBASE_USER_KEY = 'a';
     });
     test('Firebase will return false if user exists', async () => {
         mockDB.GetPrivateUserInfo.mockReturnValueOnce({email: 'someEmail', password: 'somePassword'});

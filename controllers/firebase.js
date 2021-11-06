@@ -6,7 +6,7 @@ class Firebase {
 
     async ProcessFirebaseInfoNecessary(req) {
         if (!(req.body.apiKey === process.env.FIREBASE_USER_KEY && req.body.authDomain === process.env.FIREBASE_DOMAIN)) {
-            let e = new Error("invalid firebase settings set");
+            let e = new Error('invalid firebase settings set');
             e.status = 503;
             throw e;
         }
