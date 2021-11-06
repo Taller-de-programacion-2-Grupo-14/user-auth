@@ -24,8 +24,8 @@ class Firebase {
             location: req.body.location
         };
         let response = await this.db.GetPrivateUserInfo(email);
-        if (response !== undefined && response) {
-            values[password] = response.password;
+        if (response) {
+            values.password = response.password;
         }
         req.body = values;
         return !response;
