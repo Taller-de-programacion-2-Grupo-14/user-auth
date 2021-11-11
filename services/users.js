@@ -32,12 +32,13 @@ class UserService {
         let userInfo = await this.db.GetUserInfo(values.email);
         let relevantInfo = {
             email: userInfo.email,
-            id: userInfo.id
+            id: userInfo.id,
+            is_admin: userInfo.is_admin
         };
         return jwt.sign(relevantInfo, process.env.secret, {algorithm: process.env.algorithm, expiresIn: '2h'});
     }
 
-    throwIfInvalidUser(user, values, checkPassword=true) {
+    throwIfInvalidUser(user, values, checkPassword = true) {
         if (!(user && user.email) || (checkPassword && (values.email !== user.email || values.password !== user.password))) {
             let e = new Error('wrong username or password');
             e.status = 400;
@@ -78,14 +79,17 @@ class UserService {
     async SendTokenToRetry(email) {
         let userInfo = await this.db.GetUserInfo(email);
         this.throwIfInvalidUser(userInfo, email, false);
-        const token = jwt.sign({email: email, canChange: true}, process.env.secret, {algorithm: process.env.algorithm, expiresIn: '15m'});
+        const token = jwt.sign({email: email, canChange: true}, process.env.secret, {
+            algorithm: process.env.algorithm,
+            expiresIn: '15m'
+        });
         let mailOptions = {
             from: process.env.email,
             to: email,
             subject: 'Token de recupero',
             text: `Por favor poner el siguiente token en la aplicacion movil para recuperar su contraseña:\n ${token}`
         };
-        await this.sender.sendMail(mailOptions, function(error, info){
+        await this.sender.sendMail(mailOptions, function (error, info) {
             if (error) {
                 let e = Error('could not send email');
                 console.log(error, e);
@@ -100,6 +104,18 @@ class UserService {
 
     async GetBatchUsers(ids) {
         return await this.db.GetBatchUsers(ids)
+    }
+
+    async GetAllUsers(query) {
+        let filters = {
+            limit: query.limit || 500,
+            offset: query.offset || 0,
+            blocked: query.blocked,
+            email: query.email,
+            subscription: query.subscription
+        }
+        let queryFilters = Object.entries(filters).filter((v) => v[1] !== undefined);
+        return this.db.GetUsers(queryFilters);
     }
 }
 

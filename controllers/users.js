@@ -148,6 +148,21 @@ class Users {
         });
         this.service.GetBatchUsers(idsToGet).then(data => res.json({users: data, total: data.length}));
     }
+
+    async HandleGetAllUsers(req, res) {
+        if (!req.decoded.is_admin) {
+            let e = new Error('user has no permissions to access this service');
+            e.status = 403;
+            throw e;
+        }
+        let query = req.query;
+        this.service.GetAllUsers(query).then(data => res.json({
+            users: data,
+            total: data.length || 0,
+            offset: query.offset || 0,
+            limit: query.limit || 500,
+        }));
+    }
 }
 
 module.exports = Users;
