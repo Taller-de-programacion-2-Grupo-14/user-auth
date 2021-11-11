@@ -37,10 +37,14 @@ class PG {
         });
     }
 
-    async GetUserInfo(email) {
+    async GetUserInfo(email, id) {
+        if (id === undefined) {
+            id = 0;
+        }
         const query = `SELECT *
                        FROM profile_user
-                       WHERE email = '${email}'`;
+                       WHERE email = '${email}'
+                          OR user_id = ${id}`;
         const client = this.client;
         return await new Promise((resolve) => {
             client.query(query, (err, res) => {

@@ -22,9 +22,9 @@ class UserService {
         return true;
     }
 
-    async GetUser(username) {
-        return this.db.GetUserInfo(username);
-    } //Refactor this method
+    async GetUser(username, userId) {
+        return this.db.GetUserInfo(username, userId);
+    }
 
     async LoginUser(values) {
         let user = await this.db.GetPrivateUserInfo(values.email);

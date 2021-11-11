@@ -35,7 +35,15 @@ class Users {
 
     async HandleUserGet(req, res) {
         let email = req.query.email;
-        if (!(email && email !== '')) {
+        let id = req.query.id;
+        if (id) {
+            if (id < 1) {
+                let e = new Error("invalid id, can not be less than zero");
+                e.status = 400;
+                throw e;
+            }
+            email = email || '';
+        } else if (!(email && email !== '')) {
             let token = req.headers['x-access-token'];
             let tokenParsed = await jwt.decode(token, {secret: process.env.secret, algorithm: process.env.algorithm});
             if (!tokenParsed) {
@@ -45,7 +53,11 @@ class Users {
             }
             email = tokenParsed.email;
         }
-        let userInfo = await this.service.GetUser(email);
+        let userInfo = await this.service.GetUser(email, id);
+        this.throwIfNotFound(userInfo);
+        res.json(userInfo);
+    }
+
         if (!(userInfo && userInfo.email)) {
             let e = new Error('user not found');
             e.status = 400;
