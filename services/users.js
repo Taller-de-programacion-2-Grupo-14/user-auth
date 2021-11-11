@@ -103,7 +103,7 @@ class UserService {
     }
 
     async GetBatchUsers(ids) {
-        return await this.db.GetBatchUsers(ids)
+        return await this.db.GetBatchUsers(ids);
     }
 
     async GetAllUsers(query) {
@@ -113,7 +113,7 @@ class UserService {
             blocked: query.blocked,
             email: query.email,
             subscription: query.subscription
-        }
+        };
         let queryFilters = Object.entries(filters).filter((v) => v[1] !== undefined);
         return this.db.GetUsers(queryFilters);
     }

@@ -137,7 +137,7 @@ class PG {
             select *
             from profile_user
             where user_id in (${ids});
-        `
+        `;
         const client = this.client;
         return await new Promise((resolve) => {
             client.query(query, (err, res) => {
@@ -151,26 +151,26 @@ class PG {
     }
 
     async GetUsers(queryFilters) {
-        let whereClause = ''
-        let endings = `offset ${queryFilters.find((v) => v[0] === 'offset')[1]} limit ${queryFilters.find((v) => v[0] === 'limit')[1]}`
-        queryFilters = queryFilters.filter(v => v[0] !== 'limit' && v[0] !== 'offset')
+        let whereClause = '';
+        let endings = `offset ${queryFilters.find((v) => v[0] === 'offset')[1]} limit ${queryFilters.find((v) => v[0] === 'limit')[1]}`;
+        queryFilters = queryFilters.filter(v => v[0] !== 'limit' && v[0] !== 'offset');
         if (queryFilters.length) {
-            whereClause = ' WHERE'
+            whereClause = ' WHERE';
             queryFilters.forEach((v) => {
                 let filter;
                 if (v[0] === 'email') {
-                    filter = ` ${v[0]} LIKE '%${v[1]}%'`
+                    filter = ` ${v[0]} LIKE '%${v[1]}%'`;
                 } else {
-                    filter = ` ${v[0]} = '${v[1]}'`
+                    filter = ` ${v[0]} = '${v[1]}'`;
                 }
                 if (!whereClause.endsWith('WHERE')) {
-                    whereClause += 'AND'
+                    whereClause += 'AND';
                 }
                 whereClause += filter;
-            })
+            });
         }
         let query = `select *
-                     from profile_user${whereClause} ${endings};`
+                     from profile_user${whereClause} ${endings};`;
         const client = this.client;
         return await new Promise((resolve) => {
             client.query(query, (err, res) => {

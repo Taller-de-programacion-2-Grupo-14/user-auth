@@ -106,11 +106,11 @@ router.post('/login/firebase', async (req, res, next) => {
 
 router.get('/batch', async (...args) => {
     await doRequest(args, async(...args) => await usersContainer.HandleRetrieveGroupUsers(...args));
-})
+});
 
 router.get('/all', helper.verify, async (...args) => {
     await doRequest(args, async(...args) => await usersContainer.HandleGetAllUsers(...args));
-})
+});
 
 router.post('/login/admin', validateSchema('login-user'), async (...args) => {
     await doRequest(args, async(...args) => await usersContainer.HandleLoginAdmin(...args));

@@ -38,7 +38,7 @@ class Users {
         let id = req.query.id;
         if (id) {
             if (id < 1) {
-                let e = new Error("invalid id, can not be less than zero");
+                let e = new Error('invalid id, can not be less than zero');
                 e.status = 400;
                 throw e;
             }
@@ -171,24 +171,24 @@ class Users {
                 e.status = 451;
                 throw e;
             }
-        })
+        });
         await this.HandleUserLogin(req, res);
     }
 
     async HandleBlockUser(req, res) {
         let id = this.getIdIfAdmin(req);
-        this.service.GetUser('', id).then(v => this.throwIfNotFound(v))
+        this.service.GetUser('', id).then(v => this.throwIfNotFound(v));
         this.service.BlockUser(id).then(() => res.json({
             message: `user ${id} was blocked correctly`, status: 200
-        }))
+        }));
     }
 
     async HandleUnblockUser(req, res) {
         let id = this.getIdIfAdmin(req);
-        this.service.GetUser('', id).then(v => this.throwIfNotFound(v))
+        this.service.GetUser('', id).then(v => this.throwIfNotFound(v));
         this.service.UnblockUser(id).then(() => res.json({
             message: `user ${id} was unblocked correctly`, status: 200
-        }))
+        }));
     }
 
     getIdIfAdmin(req) {
