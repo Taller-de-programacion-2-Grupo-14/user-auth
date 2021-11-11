@@ -97,6 +97,10 @@ class UserService {
     async ChangePassword(information) {
         await this.db.UpdateUserRegistry(information);
     }
+
+    async GetBatchUsers(ids) {
+        return await this.db.GetBatchUsers(ids)
+    }
 }
 
 module.exports = UserService;

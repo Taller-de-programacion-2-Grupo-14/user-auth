@@ -129,6 +129,25 @@ class Users {
             status: 200
         }));
     }
+
+    async HandleRetrieveGroupUsers(req, res) {
+        let ids = req.query.ids;
+        if (!ids) {
+            let e = Error(`invalid field sent, required ids field with strings separated with commas, ${ids || 'nothing'} received`);
+            e.status = 400;
+            throw e;
+        }
+        let idsToGet = ids.split(',').map((v) => {
+            let number = parseInt(v);
+            if (isNaN(number)) {
+                let e = Error(`invalid id received, expected a number ${v} received`);
+                e.status = 400;
+                throw e;
+            }
+            return number;
+        });
+        this.service.GetBatchUsers(idsToGet).then(data => res.json({users: data, total: data.length}));
+    }
 }
 
 module.exports = Users;

@@ -131,6 +131,24 @@ class PG {
             });
         });
     }
+
+    async GetBatchUsers(ids) {
+        const query = `
+            select *
+            from profile_user
+            where user_id in (${ids});
+        `
+        const client = this.client;
+        return await new Promise((resolve) => {
+            client.query(query, (err, res) => {
+                if (err) {
+                    console.log(err);
+                    throw err;
+                }
+                resolve(res.rows);
+            });
+        });
+    }
 }
 
 module.exports = PG;
