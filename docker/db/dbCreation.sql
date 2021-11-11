@@ -19,6 +19,9 @@ CREATE TABLE profile_user
     interest   varchar(255),
     photo_url   varchar(255),
     location   varchar(255),
+    subscription varchar(255) default 'free' check (subscription in ('free', 'platinum', 'black')),
+    is_admin boolean default false,
+    blocked boolean default false,
     PRIMARY KEY (user_id),
     FOREIGN KEY (user_id) REFERENCES user_registry (id) ON DELETE CASCADE,
     UNIQUE (email)
