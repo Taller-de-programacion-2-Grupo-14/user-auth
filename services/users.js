@@ -117,6 +117,14 @@ class UserService {
         let queryFilters = Object.entries(filters).filter((v) => v[1] !== undefined);
         return this.db.GetUsers(queryFilters);
     }
+
+    async BlockUser(id) {
+        await this.db.SetBlocked(id, true);
+    }
+
+    async UnblockUser(id) {
+        await this.db.SetBlocked(id, false);
+    }
 }
 
 module.exports = UserService;

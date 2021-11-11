@@ -58,12 +58,12 @@ class Users {
         res.json(userInfo);
     }
 
+    throwIfNotFound(userInfo) {
         if (!(userInfo && userInfo.email)) {
             let e = new Error('user not found');
             e.status = 400;
             throw e;
         }
-        res.json(userInfo);
     }
 
     async HandleUserPut(req, res) {
@@ -173,6 +173,31 @@ class Users {
             }
         })
         await this.HandleUserLogin(req, res);
+    }
+
+    async HandleBlockUser(req, res) {
+        let id = this.getIdIfAdmin(req);
+        this.service.GetUser('', id).then(v => this.throwIfNotFound(v))
+        this.service.BlockUser(id).then(() => res.json({
+            message: `user ${id} was blocked correctly`, status: 200
+        }))
+    }
+
+    async HandleUnblockUser(req, res) {
+        let id = this.getIdIfAdmin(req);
+        this.service.GetUser('', id).then(v => this.throwIfNotFound(v))
+        this.service.UnblockUser(id).then(() => res.json({
+            message: `user ${id} was unblocked correctly`, status: 200
+        }))
+    }
+
+    getIdIfAdmin(req) {
+        if (!req.decoded.is_admin) {
+            let e = new Error('user has no permissions to access this service');
+            e.status = 403;
+            throw e;
+        }
+        return req.param('id');
     }
 }
 
