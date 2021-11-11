@@ -163,6 +163,17 @@ class Users {
             limit: query.limit || 500,
         }));
     }
+
+    async HandleLoginAdmin(req, res) {
+        this.service.GetUser(req.body.email).then(v => {
+            if (!v.is_admin) {
+                let e = new Error('invalid email or user is not admin');
+                e.status = 451;
+                throw e;
+            }
+        })
+        await this.HandleUserLogin(req, res);
+    }
 }
 
 module.exports = Users;
