@@ -1,6 +1,6 @@
 openapi: "3.0.0"
 servers:
-  - url: 'https://ubademy-14.herokuapp.com/'
+  - url: 'https://ubademy-14-prod.herokuapp.com/'
 info:
   description: User auth tiene la responsabilidad de crear y mantener la informacion del usuario
   version: 0.2.0

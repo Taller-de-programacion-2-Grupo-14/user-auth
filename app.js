@@ -23,6 +23,9 @@ app.use(function (req, res, next) {
 });
 
 app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile));
+app.get('/doc-yml', (req, res) => {
+    res.send(swaggerFile);
+});
 
 if(process.env.NODE_ENV === 'production') {
     app.use(express.static(path.join(__dirname, 'client/build')));
