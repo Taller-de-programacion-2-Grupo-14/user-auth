@@ -226,4 +226,32 @@ describe('services.js tests', () => {
         expect(sender.sendMail.mock.calls.length).toBe(1);
     });
 
+    test('service block user delegates responsibility onto the db layer', async () => {
+        let mockDB = {SetBlocked: jest.fn()};
+        let service = new UserService(mockDB, null);
+        await service.BlockUser(FAKE_EMAIL);
+    });
+
+    test('service unblock user delegates responsibility onto the db layer', async () => {
+        let mockDB = {SetBlocked: jest.fn()};
+        let service = new UserService(mockDB, null);
+        await service.UnblockUser(FAKE_EMAIL);
+    });
+
+    test('service get batch user delegates responsibility onto the db layer', async () => {
+        let mockDB = {GetBatchUsers: jest.fn()};
+        let service = new UserService(mockDB, null);
+        await service.GetBatchUsers(FAKE_EMAIL);
+    });
+
+    test('Get all users clear filters that are empty', async () => {
+        let filters = {}
+        let mockDB = {GetUsers: jest.fn((data) => {
+                filters.data = data
+            })};
+        let service = new UserService(mockDB, null);
+        await service.GetAllUsers({blocked: false});
+        let finalQuery = filters.data;
+        expect(finalQuery.length).toBe(3);
+    });
 });
