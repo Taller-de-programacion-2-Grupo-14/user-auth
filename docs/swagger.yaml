@@ -1,6 +1,6 @@
 openapi: "3.0.0"
 servers:
-  - url: 'https://ubademy-14.herokuapp.com/'
+  - url: 'https://ubademy-14-prod.herokuapp.com/'
 info:
   description: User auth tiene la responsabilidad de crear y mantener la informacion del usuario
   version: 0.2.0
@@ -89,6 +89,29 @@ paths:
                 $ref: '#/components/schemas/loginSuccessful'
         '400':
           description: Invalid username or password
+  '/users/login/admin':
+    'post':
+      tags:
+        - User
+      description: Modifica a usuario existente
+      requestBody:
+        description: Body para el login del usuario admin
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/userLogin'
+      responses:
+        '200':
+          description: User loggeado correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/loginSuccessful'
+        '400':
+          description: Invalid username or password
+        '451':
+          description: Usuario no existe o no es administrador
   '/users/change-password':
     'patch':
       tags:
@@ -207,6 +230,92 @@ paths:
           description: Datos de usuario invalidos
         '503':
           description: Error desconocido
+  '/users/:id':
+    'delete':
+      tags:
+        - User
+      description: Bloquea usuario existente desde el admin
+      parameters:
+        - in: header
+          name: x-access-token
+          required: true
+          description: token recibido de login
+        - in: path
+          name: id
+          required: true
+          description: id del usuario a eliminar
+          example: 303456
+      responses:
+        '200':
+          description: User eliminado correctamente
+        '401':
+          description: Token invalido
+        '403':
+          description: No token provisto
+        '404':
+          description: Usuario no encontrado
+  '/users/unblock/:id':
+    'post':
+      tags:
+        - User
+      description: Desbloquea usuario existente desde el admin
+      parameters:
+        - in: header
+          name: x-access-token
+          required: true
+          description: token recibido de login
+        - in: path
+          name: id
+          required: true
+          description: id del usuario a eliminar
+          example: 303456
+      responses:
+        '200':
+          description: User eliminado correctamente
+        '401':
+          description: Token invalido
+        '403':
+          description: No token provisto
+        '404':
+          description: Usuario no encontrado
+  '/users/all':
+    'get':
+      tags:
+        - User
+      description: Obtiene parametros
+      parameters:
+        - in: header
+          name: x-access-token
+          required: true
+          description: token recibido de login
+        - in: query
+          name: blocked
+          description: usuario es bloqueado
+        - in: query
+          name: email
+          description: cercania a como es el email, no es necesario que sea exacto pero si bien escrito
+          example: demy
+        - in: query
+          name: subscription
+          description: subscripcion del usuario
+        - in: query
+          name: limit
+          description: cantidad de usuarios para obtener maximo
+        - in: query
+          name: offset
+          description: offset para los usuarios
+
+      responses:
+        '200':
+          description: Users que cumplen con los filtros
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/usersRetrieved'
+        '401':
+          description: Token invalido
+        '403':
+          description: No token provisto
 
 components:
   schemas:
@@ -274,9 +383,6 @@ components:
         last_name:
           type: 'string'
           example: pepardo
-        role:
-          type: string
-          example: 'Student'
         interest:
           type: string
           example: 'merca'
@@ -289,6 +395,15 @@ components:
         photo_url:
           type: string
           description: URL de la foto del usuario
+        subscription:
+          type: string
+          description: Tipo de subscripcion del usuario
+        is_admin:
+          type: boolean
+          description: Define si el usuario es admin
+        is_blocked:
+          type: boolean
+          description: Define si el usuario esta blockeado o no
     changePassword:
       type: object
       properties:
@@ -327,3 +442,27 @@ components:
         photoURL:
           type: string
           description: URL de la foto del usuario
+    usersRetrieved:
+      type: object
+      properties:
+        total:
+          type: integer
+          example: 5
+          description: cantidad de usuarios obtenidos
+        limit:
+          type: integer
+          example: 10
+          description: cantidad de usuarios obtenidos
+        offset:
+          type: integer
+          example: 5
+          description: cantidad de usuarios obtenidos
+        usuarios:
+          type: object
+          description: array de usuarios obtenidos
+          properties:
+            usuario:
+              description: usuario obtenido
+              type: object
+              example:
+                $ref: '#/components/schemas/userRetrieved'

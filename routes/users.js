@@ -104,4 +104,24 @@ router.post('/login/firebase', async (req, res, next) => {
     await doRequest(args, async(...args) => await usersContainer.HandleUserLogin(...args));
 });
 
+router.get('/batch', async (...args) => {
+    await doRequest(args, async(...args) => await usersContainer.HandleRetrieveGroupUsers(...args));
+});
+
+router.get('/all', helper.verify, async (...args) => {
+    await doRequest(args, async(...args) => await usersContainer.HandleGetAllUsers(...args));
+});
+
+router.post('/login/admin', validateSchema('login-user'), async (...args) => {
+    await doRequest(args, async(...args) => await usersContainer.HandleLoginAdmin(...args));
+});
+
+router.delete('/:id', helper.verify, async (...args) => {
+    await doRequest(args, async(...args) => await usersContainer.HandleBlockUser(...args));
+});
+
+router.post('/unblock/:id', helper.verify, async (...args) => {
+    await doRequest(args, async(...args) => await usersContainer.HandleUnblockUser(...args));
+});
+
 module.exports = router;

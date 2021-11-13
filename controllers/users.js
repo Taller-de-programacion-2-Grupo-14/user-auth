@@ -35,7 +35,15 @@ class Users {
 
     async HandleUserGet(req, res) {
         let email = req.query.email;
-        if (!(email && email !== '')) {
+        let id = req.query.id;
+        if (id) {
+            if (id < 1) {
+                let e = new Error('invalid id, can not be less than zero');
+                e.status = 400;
+                throw e;
+            }
+            email = email || '';
+        } else if (!(email && email !== '')) {
             let token = req.headers['x-access-token'];
             let tokenParsed = await jwt.decode(token, {secret: process.env.secret, algorithm: process.env.algorithm});
             if (!tokenParsed) {
@@ -45,13 +53,17 @@ class Users {
             }
             email = tokenParsed.email;
         }
-        let userInfo = await this.service.GetUser(email);
+        let userInfo = await this.service.GetUser(email, id);
+        this.throwIfNotFound(userInfo);
+        res.json(userInfo);
+    }
+
+    throwIfNotFound(userInfo) {
         if (!(userInfo && userInfo.email)) {
             let e = new Error('user not found');
             e.status = 400;
             throw e;
         }
-        res.json(userInfo);
     }
 
     async HandleUserPut(req, res) {
@@ -116,6 +128,76 @@ class Users {
             message: 'password modified successfully',
             status: 200
         }));
+    }
+
+    async HandleRetrieveGroupUsers(req, res) {
+        let ids = req.query.ids;
+        if (!ids) {
+            let e = Error(`invalid field sent, required ids field with strings separated with commas, ${ids || 'nothing'} received`);
+            e.status = 400;
+            throw e;
+        }
+        let idsToGet = ids.split(',').map((v) => {
+            let number = parseInt(v);
+            if (isNaN(number)) {
+                let e = Error(`invalid id received, expected a number ${v} received`);
+                e.status = 400;
+                throw e;
+            }
+            return number;
+        });
+        this.service.GetBatchUsers(idsToGet).then(data => res.json({users: data, total: data.length}));
+    }
+
+    async HandleGetAllUsers(req, res) {
+        if (!req.decoded.is_admin) {
+            let e = new Error('user has no permissions to access this service');
+            e.status = 403;
+            throw e;
+        }
+        let query = req.query;
+        this.service.GetAllUsers(query).then(data => res.json({
+            users: data,
+            total: data.length || 0,
+            offset: query.offset || 0,
+            limit: query.limit || 500,
+        }));
+    }
+
+    async HandleLoginAdmin(req, res) {
+        await this.service.GetUser(req.body.email).then(v => {
+            if (!v.is_admin) {
+                let e = new Error('invalid email or user is not admin');
+                e.status = 451;
+                throw e;
+            }
+        });
+        await this.HandleUserLogin(req, res);
+    }
+
+    async HandleBlockUser(req, res) {
+        let id = this.getIdIfAdmin(req);
+        await this.service.GetUser('', id).then(v => this.throwIfNotFound(v));
+        this.service.BlockUser(id).then(() => res.json({
+            message: `user ${id} was blocked correctly`, status: 200
+        }));
+    }
+
+    async HandleUnblockUser(req, res) {
+        let id = this.getIdIfAdmin(req);
+        await this.service.GetUser('', id).then(v => this.throwIfNotFound(v));
+        this.service.UnblockUser(id).then(() => res.json({
+            message: `user ${id} was unblocked correctly`, status: 200
+        }));
+    }
+
+    getIdIfAdmin(req) {
+        if (!req.decoded.is_admin) {
+            let e = new Error('user has no permissions to access this service');
+            e.status = 403;
+            throw e;
+        }
+        return req.param('id');
     }
 }
 

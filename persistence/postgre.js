@@ -37,10 +37,14 @@ class PG {
         });
     }
 
-    async GetUserInfo(email) {
+    async GetUserInfo(email, id) {
+        if (id === undefined) {
+            id = 0;
+        }
         const query = `SELECT *
                        FROM profile_user
-                       WHERE email = '${email}'`;
+                       WHERE email = '${email}'
+                          OR user_id = ${id}`;
         const client = this.client;
         return await new Promise((resolve) => {
             client.query(query, (err, res) => {
@@ -118,6 +122,73 @@ class PG {
                        where email = '${information.email}'`;
         const client = this.client;
         await new Promise((resolve) => {
+            client.query(query, (err) => {
+                if (err) {
+                    console.log(err);
+                    throw err;
+                }
+                resolve();
+            });
+        });
+    }
+
+    async GetBatchUsers(ids) {
+        const query = `
+            select *
+            from profile_user
+            where user_id in (${ids});
+        `;
+        const client = this.client;
+        return await new Promise((resolve) => {
+            client.query(query, (err, res) => {
+                if (err) {
+                    console.log(err);
+                    throw err;
+                }
+                resolve(res.rows);
+            });
+        });
+    }
+
+    async GetUsers(queryFilters) {
+        let whereClause = '';
+        let endings = `offset ${queryFilters.find((v) => v[0] === 'offset')[1]} limit ${queryFilters.find((v) => v[0] === 'limit')[1]}`;
+        queryFilters = queryFilters.filter(v => v[0] !== 'limit' && v[0] !== 'offset');
+        if (queryFilters.length) {
+            whereClause = ' WHERE';
+            queryFilters.forEach((v) => {
+                let filter;
+                if (v[0] === 'email') {
+                    filter = ` ${v[0]} LIKE '%${v[1]}%'`;
+                } else {
+                    filter = ` ${v[0]} = '${v[1]}'`;
+                }
+                if (!whereClause.endsWith('WHERE')) {
+                    whereClause += 'AND';
+                }
+                whereClause += filter;
+            });
+        }
+        let query = `select *
+                     from profile_user${whereClause} ${endings};`;
+        const client = this.client;
+        return await new Promise((resolve) => {
+            client.query(query, (err, res) => {
+                if (err) {
+                    console.log(err);
+                    throw err;
+                }
+                resolve(res.rows);
+            });
+        });
+    }
+
+    async SetBlocked(id, block) {
+        let query = `UPDATE profile_user
+                     SET blocked = ${block}
+                     where user_id = ${id}`;
+        const client = this.client;
+        return await new Promise((resolve) => {
             client.query(query, (err) => {
                 if (err) {
                     console.log(err);
