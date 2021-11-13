@@ -190,7 +190,7 @@ describe('controller.js tests', () => {
         const innerResponse = {id: 1};
         let mockService = {GetBatchUsers: jest.fn(() => Promise.resolve(innerResponse))};
         let controller = new Users(mockService);
-        await controller.HandleRetrieveGroupUsers({query: {ids: "2,3"}}, res);
+        await controller.HandleRetrieveGroupUsers({query: {ids: '2,3'}}, res);
         expect(jsonResponse.data.users).toBe(innerResponse);
     });
 

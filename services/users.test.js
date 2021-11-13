@@ -245,10 +245,10 @@ describe('services.js tests', () => {
     });
 
     test('Get all users clear filters that are empty', async () => {
-        let filters = {}
+        let filters = {};
         let mockDB = {GetUsers: jest.fn((data) => {
-                filters.data = data
-            })};
+            filters.data = data;
+        })};
         let service = new UserService(mockDB, null);
         await service.GetAllUsers({blocked: false});
         let finalQuery = filters.data;
