@@ -165,7 +165,7 @@ class Users {
     }
 
     async HandleLoginAdmin(req, res) {
-        this.service.GetUser(req.body.email).then(v => {
+        await this.service.GetUser(req.body.email).then(v => {
             if (!v.is_admin) {
                 let e = new Error('invalid email or user is not admin');
                 e.status = 451;
@@ -177,7 +177,7 @@ class Users {
 
     async HandleBlockUser(req, res) {
         let id = this.getIdIfAdmin(req);
-        this.service.GetUser('', id).then(v => this.throwIfNotFound(v));
+        await this.service.GetUser('', id).then(v => this.throwIfNotFound(v));
         this.service.BlockUser(id).then(() => res.json({
             message: `user ${id} was blocked correctly`, status: 200
         }));
@@ -185,7 +185,7 @@ class Users {
 
     async HandleUnblockUser(req, res) {
         let id = this.getIdIfAdmin(req);
-        this.service.GetUser('', id).then(v => this.throwIfNotFound(v));
+        await this.service.GetUser('', id).then(v => this.throwIfNotFound(v));
         this.service.UnblockUser(id).then(() => res.json({
             message: `user ${id} was unblocked correctly`, status: 200
         }));

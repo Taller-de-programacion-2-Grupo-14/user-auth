@@ -120,7 +120,6 @@ describe('controller.js tests', () => {
         expect(res.json.mock.calls[0][0].status).toBe(200);
     });
 
-    //ToDo: test when the user CAN modify the password
     test('Password can not be modify if user is not allowed to change it', async () => {
         let res = {json: jest.fn(), status: jest.fn()};
         let controller = new Users(null);
@@ -136,5 +135,224 @@ describe('controller.js tests', () => {
         }
         expect(result.status).toBe(400);
         expect(result.passed).toBe(true);
+    });
+
+    test('Password can modify if user is allowed to change it', async () => {
+        let jsonResponse = {};
+        let res = {
+            json: jest.fn((data) => {
+                jsonResponse.data = data;
+            }), status: jest.fn(() => res)
+        };
+        let mockService = {ChangePassword: jest.fn(() => Promise.resolve())};
+        let controller = new Users(mockService);
+        await controller.HandleRecreatePassword({
+            decoded: {email: FAKE_EMAIL, canChange: true},
+            body: {newPassword: FAKE_PASSWORD}
+        }, res);
+    });
+
+    test('Cannot retrieve group of users if ids are not received', async () => {
+        let res = {json: jest.fn(), status: jest.fn()};
+        let controller = new Users(null);
+        let result = {passed: false, status: 200};
+        try {
+            await controller.HandleRetrieveGroupUsers({query: {}}, res);
+        } catch (e) {
+            result.passed = true;
+            result.status = e.status;
+        }
+        expect(result.status).toBe(400);
+        expect(result.passed).toBe(true);
+    });
+
+    test('Cannot retrieve group of users if ids are invalid', async () => {
+        let res = {json: jest.fn(), status: jest.fn()};
+        let controller = new Users(null);
+        let result = {passed: false, status: 200};
+        try {
+            await controller.HandleRetrieveGroupUsers({query: {ids: 'invalid id'}}, res);
+        } catch (e) {
+            result.passed = true;
+            result.status = e.status;
+        }
+        expect(result.status).toBe(400);
+        expect(result.passed).toBe(true);
+    });
+
+    test('Retrieve group of users if data is okay', async () => {
+        let jsonResponse = {};
+        let res = {
+            json: jest.fn((data) => {
+                jsonResponse.data = data;
+            }), status: jest.fn()
+        };
+        const innerResponse = {id: 1};
+        let mockService = {GetBatchUsers: jest.fn(() => Promise.resolve(innerResponse))};
+        let controller = new Users(mockService);
+        await controller.HandleRetrieveGroupUsers({query: {ids: "2,3"}}, res);
+        expect(jsonResponse.data.users).toBe(innerResponse);
+    });
+
+    test('Cannot get all users if user sender is not admin', async () => {
+        let res = {json: jest.fn(), status: jest.fn()};
+        let controller = new Users(null);
+        let result = {passed: false, status: 200};
+        try {
+            await controller.HandleGetAllUsers({
+                decoded: {is_admin: false}
+            }, res);
+        } catch (e) {
+            result.passed = true;
+            result.status = e.status;
+        }
+        expect(result.status).toBe(403);
+        expect(result.passed).toBe(true);
+    });
+
+    test('If user is admin then get all users with query is sent', async () => {
+        let jsonResponse = {};
+        let res = {
+            json: jest.fn((data) => {
+                jsonResponse.data = data;
+            }), status: jest.fn()
+        };
+        const innerResponse = {id: 1};
+        let mockService = {GetAllUsers: jest.fn(() => Promise.resolve(innerResponse))};
+        let controller = new Users(mockService);
+        await controller.HandleGetAllUsers({
+            decoded: {is_admin: true}, query: {}
+        }, res);
+        expect(jsonResponse.data.users).toBe(innerResponse);
+    });
+
+    test('If user that is not admin tries to login on the method only for admin then error is thrown', async () => {
+        let res = {json: jest.fn(), status: jest.fn()};
+        let mockService = {GetUser: jest.fn(() => Promise.resolve({is_admin: false}))};
+        let controller = new Users(mockService);
+        let result = {passed: false, status: 200};
+        try {
+            await controller.HandleLoginAdmin({body: {email: FAKE_EMAIL}}, res);
+        } catch (e) {
+            result.passed = true;
+            result.message = e.message;
+            result.status = e.status;
+        }
+        expect(result.message).toBe('invalid email or user is not admin');
+        expect(result.status).toBe(451);
+        expect(result.passed).toBe(true);
+    });
+
+    test('If user is admin login is used as normally', async () => {
+        let jsonResponse = {};
+        let res = {
+            json: jest.fn((data) => {
+                jsonResponse.data = data;
+            }), status: jest.fn()
+        };
+        let mockService = {GetUser: jest.fn(() => Promise.resolve({is_admin: true})), LoginUser: jest.fn()};
+        mockService.LoginUser.mockReturnValueOnce(SUCCESS);
+        let controller = new Users(mockService);
+        await controller.HandleLoginAdmin({body: {email: FAKE_EMAIL}, password: FAKE_PASSWORD}, res);
+        expect(jsonResponse.data.token).toBe(SUCCESS);
+        expect(res.status).toBe(200);
+    });
+
+    test('Cannot block user if sender is not admin', async () => {
+        let res = {json: jest.fn(), status: jest.fn()};
+        let controller = new Users(null);
+        let result = {passed: false, status: 200};
+        try {
+            await controller.HandleBlockUser({
+                decoded: {is_admin: false}
+            }, res);
+        } catch (e) {
+            result.passed = true;
+            result.status = e.status;
+        }
+        expect(result.status).toBe(403);
+        expect(result.passed).toBe(true);
+    });
+
+    test('Can not block user if user does not exist ', async () => {
+        let jsonResponse = {};
+        let res = {
+            json: jest.fn((data) => {
+                jsonResponse.data = data;
+            }), status: jest.fn()
+        };
+        let mockService = {GetUser: jest.fn(() => Promise.resolve(undefined))};
+        let controller = new Users(mockService);
+        let result = {passed: false, status: 200};
+        try {
+            await controller.HandleBlockUser({
+                decoded: {is_admin: true},
+                param: jest.fn(() => 2)
+            }, res);
+        } catch (e) {
+            result.message = e.message;
+            result.passed = true;
+            result.status = e.status;
+        }
+        expect(result.message).toBe('user not found');
+        expect(result.status).toBe(400);
+        expect(result.passed).toBe(true);
+    });
+
+    test('Can block user conditions fulfilled', async () => {
+        let jsonResponse = {};
+        let res = {
+            json: jest.fn((data) => {
+                jsonResponse.data = data;
+            }), status: jest.fn()
+        };
+        let mockService = {GetUser: jest.fn(() => Promise.resolve({email: FAKE_EMAIL})), BlockUser: jest.fn(() => Promise.resolve('2'))};
+        let controller = new Users(mockService);
+        await controller.HandleBlockUser({
+            decoded: {is_admin: true},
+            param: jest.fn(() => 2)
+        }, res);
+        expect(jsonResponse.data.status).toBe(200);
+    });
+
+    test('Can not unblock user if user does not exist ', async () => {
+        let jsonResponse = {};
+        let res = {
+            json: jest.fn((data) => {
+                jsonResponse.data = data;
+            }), status: jest.fn()
+        };
+        let mockService = {GetUser: jest.fn(() => Promise.resolve(undefined))};
+        let controller = new Users(mockService);
+        let result = {passed: false, status: 200};
+        try {
+            await controller.HandleUnblockUser({
+                decoded: {is_admin: true},
+                param: jest.fn(() => 2)
+            }, res);
+        } catch (e) {
+            result.message = e.message;
+            result.passed = true;
+            result.status = e.status;
+        }
+        expect(result.message).toBe('user not found');
+        expect(result.status).toBe(400);
+        expect(result.passed).toBe(true);
+    });
+
+    test('Can unblock user conditions fulfilled', async () => {
+        let jsonResponse = {};
+        let res = {
+            json: jest.fn((data) => {
+                jsonResponse.data = data;
+            }), status: jest.fn()
+        };
+        let mockService = {GetUser: jest.fn(() => Promise.resolve({email: FAKE_EMAIL})), UnblockUser: jest.fn(() => Promise.resolve('2'))};
+        let controller = new Users(mockService);
+        await controller.HandleUnblockUser({
+            decoded: {is_admin: true},
+            param: jest.fn(() => 2)
+        }, res);
+        expect(jsonResponse.data.status).toBe(200);
     });
 });
