@@ -6,10 +6,12 @@ let userSchema = require('./new-user.json');
 let loginSchema = require('./login-user.json');
 let profileSchema = require('./profile-user.json');
 let changePasswordSchema =  require('./update-password.json');
+let queryParams = require('./query-params.json');
 ajv.addSchema(userSchema, 'new-user');
 ajv.addSchema(loginSchema, 'login-user');
 ajv.addSchema(profileSchema, 'profile-user');
 ajv.addSchema(changePasswordSchema, 'change-password');
+ajv.addSchema(queryParams, 'query-param');
 
 /**
  * Format error responses
@@ -37,7 +39,11 @@ function errorResponse(schemaErrors) {
  */
 let validateSchema = (schemaName) => {
     return (req, res, next) => {
-        let valid = ajv.validate(schemaName, req.body);
+        let data = req.body;
+        if (schemaName.includes('query')) {
+            data = req.query;
+        }
+        let valid = ajv.validate(schemaName, data);
         if (!valid) {
             res.status(400);
             return res.send(errorResponse(ajv.errors));

@@ -1,0 +1,32 @@
+{
+  "title": "filters for query parameters",
+  "description": "describes properties required to change password of a user",
+  "type": "object",
+  "properties": {
+    "offset": {
+      "type": "string",
+      "description": "offset to get the users",
+      "pattern": "^[0-9]*$"
+    },
+    "limit": {
+      "type": "string",
+      "description": "limit to establish",
+      "pattern": "^[0-9]*$"
+    },
+    "blocked": {
+      "type": "string",
+      "description": "Check if user is blocked or not",
+      "enum":["false", "true"]
+    },
+    "email": {
+      "type": "string",
+      "description": "Email to search the user",
+      "pattern": "^[^);]*$"
+    },
+    "subscription": {
+      "type": "string",
+      "description": "Email to search the user",
+      "enum": ["free", "platinum", "black"]
+    }
+  }
+}
