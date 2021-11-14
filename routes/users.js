@@ -108,7 +108,7 @@ router.get('/batch', async (...args) => {
     await doRequest(args, async(...args) => await usersContainer.HandleRetrieveGroupUsers(...args));
 });
 
-router.get('/all', helper.verify, async (...args) => {
+router.get('/all', helper.verify, validateSchema('query-param'), async (...args) => {
     await doRequest(args, async(...args) => await usersContainer.HandleGetAllUsers(...args));
 });
 
