@@ -38,6 +38,10 @@ paths:
           name: email
           required: false
           example: 'ubademy.14@gmail.com'
+        - in: query
+          name: id
+          required: false
+          example: 27
         - in: header
           name: x-access-token
           required: false
@@ -89,6 +93,8 @@ paths:
                 $ref: '#/components/schemas/loginSuccessful'
         '400':
           description: Invalid username or password
+        '401':
+          description: Usuario esta blockeado
   '/users/login/admin':
     'post':
       tags:
