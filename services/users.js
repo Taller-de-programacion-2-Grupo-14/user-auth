@@ -37,7 +37,7 @@ class UserService {
         }
         let relevantInfo = {
             email: userInfo.email,
-            id: userInfo.id,
+            id: userInfo.user_id,
             is_admin: userInfo.is_admin
         };
         return jwt.sign(relevantInfo, process.env.secret, {algorithm: process.env.algorithm, expiresIn: '2h'});
