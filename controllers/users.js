@@ -168,7 +168,7 @@ class Users {
         await this.service.GetUser(req.body.email).then(v => {
             if (!v.is_admin) {
                 let e = new Error('invalid email or user is not admin');
-                e.status = 451;
+                e.status = 401;
                 throw e;
             }
         });

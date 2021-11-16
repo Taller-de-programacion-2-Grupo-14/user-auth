@@ -32,7 +32,7 @@ class UserService {
         let userInfo = await this.db.GetUserInfo(values.email);
         if (userInfo.blocked) {
             let e = new Error('user is blocked, speak with an admin to see how to solve this');
-            e.status = 401;
+            e.status = 403;
             throw e;
         }
         let relevantInfo = {

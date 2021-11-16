@@ -239,7 +239,7 @@ describe('controller.js tests', () => {
             result.status = e.status;
         }
         expect(result.message).toBe('invalid email or user is not admin');
-        expect(result.status).toBe(451);
+        expect(result.status).toBe(401);
         expect(result.passed).toBe(true);
     });
 
