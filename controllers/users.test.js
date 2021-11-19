@@ -355,4 +355,45 @@ describe('controller.js tests', () => {
         }, res);
         expect(jsonResponse.data.status).toBe(200);
     });
+
+    test('Can not set admin user if user does not exist ', async () => {
+        let jsonResponse = {};
+        let res = {
+            json: jest.fn((data) => {
+                jsonResponse.data = data;
+            }), status: jest.fn()
+        };
+        let mockService = {GetUser: jest.fn(() => Promise.resolve(undefined))};
+        let controller = new Users(mockService);
+        let result = {passed: false, status: 200};
+        try {
+            await controller.HandleAddAdmin({
+                decoded: {is_admin: true},
+                param: jest.fn(() => 2)
+            }, res);
+        } catch (e) {
+            result.message = e.message;
+            result.passed = true;
+            result.status = e.status;
+        }
+        expect(result.message).toBe('user not found');
+        expect(result.status).toBe(400);
+        expect(result.passed).toBe(true);
+    });
+
+    test('Can add admin user conditions fulfilled', async () => {
+        let jsonResponse = {};
+        let res = {
+            json: jest.fn((data) => {
+                jsonResponse.data = data;
+            }), status: jest.fn()
+        };
+        let mockService = {GetUser: jest.fn(() => Promise.resolve({email: FAKE_EMAIL})), SetAdmin: jest.fn(() => Promise.resolve('2'))};
+        let controller = new Users(mockService);
+        await controller.HandleAddAdmin({
+            decoded: {is_admin: true},
+            param: jest.fn(() => 2)
+        }, res);
+        expect(jsonResponse.data.status).toBe(200);
+    });
 });

@@ -199,6 +199,14 @@ class Users {
         }
         return req.param('id');
     }
+
+    async HandleAddAdmin(req, res) {
+        let id = this.getIdIfAdmin(req);
+        await this.service.GetUser('', id).then(v => this.throwIfNotFound(v));
+        this.service.SetAdmin(id).then(() => res.json({
+            message: `user ${id} was added as admin correctly`, status: 200
+        }));
+    }
 }
 
 module.exports = Users;
