@@ -124,4 +124,8 @@ router.post('/unblock/:id', helper.verify, async (...args) => {
     await doRequest(args, async(...args) => await usersContainer.HandleUnblockUser(...args));
 });
 
+router.post('/add-admin/:id', helper.verify, async (...args) => {
+    await doRequest(args, async(...args) => await usersContainer.HandleAddAdmin(...args));
+});
+
 module.exports = router;
