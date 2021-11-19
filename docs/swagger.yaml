@@ -236,7 +236,7 @@ paths:
           description: Datos de usuario invalidos
         '503':
           description: Error desconocido
-  '/users/:id':
+  '/users/{id}':
     'delete':
       tags:
         - User
@@ -260,7 +260,7 @@ paths:
           description: No token provisto
         '404':
           description: Usuario no encontrado
-  '/users/unblock/:id':
+  '/users/unblock/{id}':
     'post':
       tags:
         - User
@@ -322,6 +322,31 @@ paths:
           description: Token invalido
         '403':
           description: No token provisto
+
+  '/users/add-admin/{id}':
+    'delete':
+      tags:
+        - User
+      description: Bloquea usuario existente desde el admin
+      parameters:
+        - in: header
+          name: x-access-token
+          required: true
+          description: token recibido de login
+        - in: path
+          name: id
+          required: true
+          description: id del usuario a eliminar
+          example: 303456
+      responses:
+        '200':
+          description: Admin agregado correctamente
+        '401':
+          description: Token invalido
+        '403':
+          description: No token provisto
+        '404':
+          description: Usuario no encontrado
 
 components:
   schemas:
@@ -410,6 +435,9 @@ components:
         is_blocked:
           type: boolean
           description: Define si el usuario esta blockeado o no
+        created_at:
+          type: string
+          description: Hora en el que el usuario fue creado
     changePassword:
       type: object
       properties:
