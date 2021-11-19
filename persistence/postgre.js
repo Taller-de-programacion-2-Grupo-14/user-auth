@@ -198,6 +198,22 @@ class PG {
             });
         });
     }
+
+    async SetAdmin(id, block) {
+        let query = `UPDATE profile_user
+                     SET is_admin = ${block}
+                     where user_id = ${id}`;
+        const client = this.client;
+        return await new Promise((resolve) => {
+            client.query(query, (err) => {
+                if (err) {
+                    console.log(err);
+                    throw err;
+                }
+                resolve();
+            });
+        });
+    }
 }
 
 module.exports = PG;
