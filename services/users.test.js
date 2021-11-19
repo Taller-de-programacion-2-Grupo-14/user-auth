@@ -254,4 +254,11 @@ describe('services.js tests', () => {
         let finalQuery = filters.data;
         expect(finalQuery.length).toBe(3);
     });
+
+    test('service set admin user delegates responsibility onto the db layer', async () => {
+        let mockDB = {SetAdmin: jest.fn()};
+        let service = new UserService(mockDB, null);
+        await service.SetAdmin(3);
+        expect(mockDB.SetAdmin).toBeCalled();
+    });
 });

@@ -130,6 +130,10 @@ class UserService {
     async UnblockUser(id) {
         await this.db.SetBlocked(id, false);
     }
+
+    async SetAdmin(id) {
+        await this.db.SetAdmin(id, true);
+    }
 }
 
 module.exports = UserService;
