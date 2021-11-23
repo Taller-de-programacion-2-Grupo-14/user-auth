@@ -324,7 +324,7 @@ paths:
           description: No token provisto
 
   '/users/add-admin/{id}':
-    'delete':
+    'post':
       tags:
         - User
       description: Bloquea usuario existente desde el admin
