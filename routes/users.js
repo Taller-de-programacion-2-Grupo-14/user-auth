@@ -124,8 +124,22 @@ router.post('/unblock/:id', helper.verify, async (...args) => {
     await doRequest(args, async(...args) => await usersContainer.HandleUnblockUser(...args));
 });
 
-router.post('/add-admin/:id', helper.verify, async (...args) => {
-    await doRequest(args, async(...args) => await usersContainer.HandleAddAdmin(...args));
+router.post('/add-admin', helper.verify, validateSchema('new-user'), async (req, res, next) => {
+    if (!req.decoded.is_admin) {
+        res.json({message: 'invalid user, should be admin', status: 401}).status(401);
+        return
+    }
+    try {
+        let copyRes = helper.getNullRes();
+        await usersContainer.HandleUserPost(req, copyRes);
+        await usersContainer.HandleAddAdmin(req, res);
+        await usersContainer.HandleAddAdmin(req, res);
+    } catch (e) {
+        console.log(e);
+        errorHandler(e, req, res, next);
+    }
+}, async (...args) => {
+    await doRequest(args, async(...args) => await usersContainer.HandleUserLogin(...args));
 });
 
 module.exports = router;

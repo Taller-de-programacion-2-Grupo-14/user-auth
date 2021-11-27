@@ -201,8 +201,11 @@ class Users {
     }
 
     async HandleAddAdmin(req, res) {
-        let id = this.getIdIfAdmin(req);
-        await this.service.GetUser('', id).then(v => this.throwIfNotFound(v));
+        let id;
+        await this.service.GetUser(req.body.email).then(v => {
+            this.throwIfNotFound(v);
+            id = v.user_id;
+        });
         this.service.SetAdmin(id).then(() => res.json({
             message: `user ${id} was added as admin correctly`, status: 200
         }));

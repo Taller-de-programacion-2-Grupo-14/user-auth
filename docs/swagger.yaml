@@ -323,7 +323,7 @@ paths:
         '403':
           description: No token provisto
 
-  '/users/add-admin/{id}':
+  '/users/add-admin':
     'post':
       tags:
         - User
@@ -333,14 +333,18 @@ paths:
           name: x-access-token
           required: true
           description: token recibido de login
-        - in: path
-          name: id
-          required: true
-          description: id del usuario a eliminar
-          example: 303456
+      requestBody:
+        description: body para la creacion de usuario
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/userCreate'
       responses:
         '200':
           description: Admin agregado correctamente
+        '400':
+          description: Bad request
         '401':
           description: Token invalido
         '403':

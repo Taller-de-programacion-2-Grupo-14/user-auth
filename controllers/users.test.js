@@ -368,6 +368,7 @@ describe('controller.js tests', () => {
         let result = {passed: false, status: 200};
         try {
             await controller.HandleAddAdmin({
+                body: {email: FAKE_EMAIL},
                 decoded: {is_admin: true},
                 param: jest.fn(() => 2)
             }, res);
@@ -388,9 +389,10 @@ describe('controller.js tests', () => {
                 jsonResponse.data = data;
             }), status: jest.fn()
         };
-        let mockService = {GetUser: jest.fn(() => Promise.resolve({email: FAKE_EMAIL})), SetAdmin: jest.fn(() => Promise.resolve('2'))};
+        let mockService = {GetUser: jest.fn(() => Promise.resolve({email: FAKE_EMAIL, user_id: 20})), SetAdmin: jest.fn(() => Promise.resolve('2'))};
         let controller = new Users(mockService);
         await controller.HandleAddAdmin({
+            body: {email: FAKE_EMAIL},
             decoded: {is_admin: true},
             param: jest.fn(() => 2)
         }, res);
