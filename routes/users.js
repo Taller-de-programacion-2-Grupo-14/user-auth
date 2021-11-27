@@ -127,7 +127,7 @@ router.post('/unblock/:id', helper.verify, async (...args) => {
 router.post('/add-admin', helper.verify, validateSchema('new-user'), async (req, res, next) => {
     if (!req.decoded.is_admin) {
         res.json({message: 'invalid user, should be admin', status: 401}).status(401);
-        return
+        return;
     }
     try {
         let copyRes = helper.getNullRes();
