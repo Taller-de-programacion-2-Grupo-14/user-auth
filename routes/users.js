@@ -1,4 +1,7 @@
 /*global process*/
+const tracer = require('dd-trace').init({
+    logInjection: true, runtimeMetrics: true});
+const logger = require('./Logger');
 let express = require('express');
 let router = express.Router();
 const {validateSchema} = require('../validators/middlewareValidator');
@@ -45,7 +48,7 @@ function errorHandler(err, req, res) {
 let db = new persistence(client);
 /* GET users listing. */
 let userService = new UserService(db, transporter);
-let usersContainer = new Users(userService);
+let usersContainer = new Users(userService, new logger(tracer));
 let firebase = new Firebase(db);
 router.post('/', validateSchema('new-user'), async (...args) => {
     await doRequest(args, async(...args) => await usersContainer.HandleUserPost(...args));
