@@ -37,8 +37,6 @@ services:
   dd:
     image: datadog/agent:latest
     container_name: datadog-agent
-    environment:
-      - DD_API_KEY=cdcb8fea78bab8ae816256ea00068f72
     volumes:
       - /proc/:/host/proc/:ro
       - /sys/fs/cgroup/:/host/sys/fs/cgroup:ro
