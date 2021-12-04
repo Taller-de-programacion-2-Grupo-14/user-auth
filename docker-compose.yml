@@ -26,9 +26,23 @@ services:
       - DB_URL=postgres://postgres:postgres@pg:5432/test_db
       - email=ubademy.14@gmail.com
       - pswd=Brancahdp123
+      - DD_ENV=local
+      - DD_LOGS_INJECTION=true
     ports:
       - "8080:8080"
     depends_on:
       - db
+    networks:
+      - my-network
+  dd:
+    image: datadog/agent:latest
+    container_name: datadog-agent
+    environment:
+      - DD_API_KEY=cdcb8fea78bab8ae816256ea00068f72
+    volumes:
+      - /proc/:/host/proc/:ro
+      - /sys/fs/cgroup/:/host/sys/fs/cgroup:ro
+    ports:
+      - "8126:8126/tcp"
     networks:
       - my-network
