@@ -1,3 +1,8 @@
+#Extracted example from https://nodejs.org/en/docs/guides/nodejs-docker-webapp/
+FROM node:14
+
+# Create app directory
+WORKDIR /usr/src/app
 # Install GPG dependencies
 RUN apt-get update \
  && apt-get install -y gnupg apt-transport-https gpg-agent curl ca-certificates
@@ -28,13 +33,6 @@ EXPOSE 8125/udp 8126/tcp
 COPY datadog-config/ /etc/datadog-agent/
 
 CMD ["/entrypoint.sh"]
-
-#Extracted example from https://nodejs.org/en/docs/guides/nodejs-docker-webapp/
-FROM node:14
-
-# Create app directory
-WORKDIR /usr/src/app
-
 # Install app dependencies
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
 # where available (npm@5+)
