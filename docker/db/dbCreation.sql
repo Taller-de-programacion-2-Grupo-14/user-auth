@@ -29,3 +29,11 @@ CREATE TABLE profile_user
 
 CREATE INDEX emailIndexProfile
     ON profile_user (email);
+
+CREATE TABLE user_tokens (
+    user_id int NOT NULL,
+    token varchar(1000) default NULL,
+    created_at timestamp default now(),
+    primary key (user_id),
+    FOREIGN KEY (user_id) REFERENCES user_registry (id)
+)

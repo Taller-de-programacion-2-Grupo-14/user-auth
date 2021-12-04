@@ -214,6 +214,55 @@ class PG {
             });
         });
     }
+
+    async SetToken(data) {
+        let user_id = data.user_id;
+        let token = data.token;
+        const query = `INSERT INTO user_tokens (user_id, token)
+                       VALUES ('${user_id}', '${token}')`;
+        const client = this.client;
+        await new Promise((resolve) => {
+            client.query(query, (err) => {
+                if (err) {
+                    console.error(err);
+                    throw err;
+                }
+            });
+            resolve();
+        });
+    }
+
+    async GetToken(id) {
+        const query = `SELECT *
+                       FROM user_tokens
+                       where user_id = '${id}'`;
+        const client = this.client;
+        return await new Promise((resolve) => {
+            client.query(query, (err, res) => {
+                if (err) {
+                    console.log(err);
+                    throw err;
+                }
+                resolve(res.rows[0]);
+            });
+        });
+    }
+
+    async UpdateToken(data) {
+        let user_id = data.user_id;
+        let token = data.token;
+        const query = `UPDATE user_tokens  SET token = '${token}', created_at =now() where user_id = '${user_id}'`;
+        const client = this.client;
+        await new Promise((resolve) => {
+            client.query(query, (err) => {
+                if (err) {
+                    console.error(err);
+                    throw err;
+                }
+            });
+            resolve();
+        });
+    }
 }
 
 module.exports = PG;

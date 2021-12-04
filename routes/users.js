@@ -145,4 +145,11 @@ router.post('/add-admin', helper.verify, validateSchema('new-user'), async (req,
     await doRequest(args, async(...args) => await usersContainer.HandleUserLogin(...args));
 });
 
+router.post('/set-token', helper.verify, validateSchema('token'), async (...args)=> {
+    await doRequest(args, async(...args) => await usersContainer.HandleSetToken(...args));
+});
+
+router.get('/get-token/:id', helper.verify, async (...args)=> {
+    await doRequest(args, async(...args) => await usersContainer.HandleGetToken(...args));
+});
 module.exports = router;

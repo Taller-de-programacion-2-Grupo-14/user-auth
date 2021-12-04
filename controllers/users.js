@@ -213,6 +213,29 @@ class Users {
             message: `user ${id} was added as admin correctly`, status: 200
         }));
     }
+
+    async HandleSetToken(req, res) {
+        let body = {
+            user_id: req.decoded.id,
+            token: req.body.token
+        };
+        await this.service.SetToken(body);
+        this.logger.log('info', 'token added');
+        dogstatsd.increment('tokens.set');
+        res.json({message: `user_id ${body.user_id} token was added correctly`, status: 200});
+    }
+
+    async HandleGetToken(req, res) {
+        let id = req.param('id');
+        let userId = parseInt(id);
+        if (isNaN(userId)) {
+            let e = Error(`invalid id received, expected a number ${id} received`);
+            e.status = 400;
+            throw e;
+        }
+        let response = await this.service.GetToken(userId);
+        res.json(response);
+    }
 }
 
 module.exports = Users;

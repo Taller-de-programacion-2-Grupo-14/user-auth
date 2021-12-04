@@ -7,11 +7,13 @@ let loginSchema = require('./login-user.json');
 let profileSchema = require('./profile-user.json');
 let changePasswordSchema =  require('./update-password.json');
 let queryParams = require('./query-params.json');
+let token = require('./token.json');
 ajv.addSchema(userSchema, 'new-user');
 ajv.addSchema(loginSchema, 'login-user');
 ajv.addSchema(profileSchema, 'profile-user');
 ajv.addSchema(changePasswordSchema, 'change-password');
 ajv.addSchema(queryParams, 'query-param');
+ajv.addSchema(token, 'token');
 
 /**
  * Format error responses

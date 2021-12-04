@@ -351,6 +351,32 @@ paths:
           description: No token provisto
         '404':
           description: Usuario no encontrado
+  '/users/set-token':
+    'post':
+      tags:
+        - User
+      description: Bloquea usuario existente desde el admin
+      parameters:
+        - in: header
+          name: x-access-token
+          required: true
+          description: token recibido de login
+      requestBody:
+        description: body para la creacion de usuario
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/token'
+      responses:
+        '200':
+          description: Admin agregado correctamente
+        '400':
+          description: Bad request
+        '401':
+          description: Token invalido
+        '403':
+          description: No token provisto
 
 components:
   schemas:
@@ -504,3 +530,9 @@ components:
               type: object
               example:
                 $ref: '#/components/schemas/userRetrieved'
+    token:
+      type: object
+      properties:
+        token:
+          type: string
+          description: 'Token provisto por firebase para notificaciones'

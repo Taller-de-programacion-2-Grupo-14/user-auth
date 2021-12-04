@@ -134,6 +134,20 @@ class UserService {
     async SetAdmin(id) {
         await this.db.SetAdmin(id, true);
     }
+
+    async SetToken(body) {
+        let wasAdded = await this.db.GetToken(body.user_id);
+        if (wasAdded) {
+            await this.db.UpdateToken(body);
+        }
+        else {
+            await this.db.SetToken(body);
+        }
+    }
+
+    async GetToken(id) {
+        return this.db.GetToken(id);
+    }
 }
 
 module.exports = UserService;
