@@ -194,22 +194,6 @@ describe('controller.js tests', () => {
         expect(jsonResponse.data.users).toBe(innerResponse);
     });
 
-    test('Cannot get all users if user sender is not admin', async () => {
-        let res = {json: jest.fn(), status: jest.fn()};
-        let controller = new Users(null);
-        let result = {passed: false, status: 200};
-        try {
-            await controller.HandleGetAllUsers({
-                decoded: {is_admin: false}
-            }, res);
-        } catch (e) {
-            result.passed = true;
-            result.status = e.status;
-        }
-        expect(result.status).toBe(403);
-        expect(result.passed).toBe(true);
-    });
-
     test('If user is admin then get all users with query is sent', async () => {
         let jsonResponse = {};
         let res = {
