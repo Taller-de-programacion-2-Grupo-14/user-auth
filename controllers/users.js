@@ -1,9 +1,12 @@
 /*global process*/
 const jwt = require('jsonwebtoken');
+let StatsD = require('hot-shots');
+let dogstatsd = new StatsD({host:'datadoghq.com'});
 
 class Users {
-    constructor(service) {
+    constructor(service, ddService) {
         this.service = service;
+        this.logger = ddService;
     }
 
     async HandleUserPost(req, res) {

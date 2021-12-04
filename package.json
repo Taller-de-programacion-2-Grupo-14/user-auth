@@ -15,14 +15,18 @@
     "ajv": "^8.6.3",
     "body-parser": "^1.19.0",
     "cookie-parser": "~1.4.4",
+    "datadog-lambda-js": "^4.66.0",
+    "dd-trace": "^1.5.1",
     "debug": "~2.6.9",
     "express": "~4.16.1",
+    "hot-shots": "^9.0.0",
     "http-errors": "~1.6.3",
     "jest": "^27.2.4",
     "jsonwebtoken": "^8.5.1",
     "morgan": "~1.9.1",
     "pg": "^8.7.1",
-    "swagger-ui-express": "^4.1.6"
+    "swagger-ui-express": "^4.1.6",
+    "winston": "^3.3.3"
   },
   "jest": {
     "collectCoverage": true,
@@ -46,6 +50,6 @@
     "pre-push": "npm run lint && npm run test"
   },
   "engines": {
-    "node": "14.x"
+    "node": ">=14.0.0"
   }
 }
