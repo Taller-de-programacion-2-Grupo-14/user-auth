@@ -36,4 +36,12 @@ CREATE TABLE user_tokens (
     created_at timestamp default now(),
     primary key (user_id),
     FOREIGN KEY (user_id) REFERENCES user_registry (id)
-)
+);
+
+CREATE TABLE waiting_update (
+    user_id int not null,
+    new_subscription varchar(255) default 'free' check (new_subscription in ('free', 'platinum', 'black')),
+    txn_hash varchar(255),
+    primary key (user_id, new_subscription),
+    foreign key (user_id) references user_registry
+);

@@ -1,6 +1,11 @@
 /*global process*/
 const jwt = require('jsonwebtoken');
-
+const fetch = require('cross-fetch');
+const pricing ={
+    'free': 0,
+    'platinum': 0.0001,
+    'black': 0.0002
+}
 class UserService {
     constructor(db, sender) {
         this.sender = sender;
@@ -147,6 +152,44 @@ class UserService {
 
     async GetToken(id) {
         return this.db.GetToken(id);
+    }
+
+    async UpgradeUser(id, subs) {
+        let info = await this.GetUser('', id);
+        let price = pricing[subs] - pricing[info.subscription];
+        if (price <= 0) {
+            let e = new Error(`invalid change from ${info.subscription} to ${subs}`);
+            e.status = 400;
+            throw e;
+        }
+        let data = {
+            headers: {
+                'x-access-token': process.env.API_TOKEN,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                senderId: id,
+                amountInEthers: `${price}`
+            }),
+            method: 'POST'
+        }
+        let res = await (await fetch(`${process.env.PAYMENTS_API}/deposit`, data)).json()
+        if (res.statusCode > 299) {
+            let e = new Error(res.message);
+            e.status = res.statusCode;
+            throw e;
+        }
+
+        await this.db.SetWaiting(id, subs, res.hash);
+        return res
+    }
+
+    async finishUpgrade(status, txn_hash) {
+        if (status) {
+            let data = await this.db.getSubs(txn_hash);
+            this.db.updateSubscription(data.user_id, data.new_subscription).then(()=> console.log('status of user updated correctly'));
+        }
+        this.db.removeSubscription(txn_hash).then(() => console.log('subscription waiting removed correctly'));
     }
 }
 

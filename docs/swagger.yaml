@@ -377,6 +377,37 @@ paths:
           description: Token invalido
         '403':
           description: No token provisto
+  '/users/upgrade-subscription':
+    'post':
+      tags:
+        - User
+      description: Upgradea usuario a nueva version
+      parameters:
+        - in: header
+          name: x-access-token
+          required: true
+          description: token recibido de login
+      requestBody:
+        description: body para el upgrade del usuario
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/subs'
+      responses:
+        '200':
+          description: transaction created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responseFromPayments'
+
+        '400':
+          description: Bad request
+        '401':
+          description: Token invalido
+        '403':
+          description: No token provisto
 
 components:
   schemas:
@@ -536,3 +567,15 @@ components:
         token:
           type: string
           description: 'Token provisto por firebase para notificaciones'
+    subs:
+      type: object
+      properties:
+        subscription:
+          type: string
+          example: 'basico|estandar|premium'
+    responseFromPayments:
+      type: object
+      properties:
+        txn_hash:
+          type: string
+          description: transaction hash a ser devuelto para que el usuario pueda chequear el estado de su transaccion desde su wallet

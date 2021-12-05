@@ -152,4 +152,12 @@ router.post('/set-token', helper.verify, validateSchema('token'), async (...args
 router.get('/get-token/:id', helper.verify, async (...args)=> {
     await doRequest(args, async(...args) => await usersContainer.HandleGetToken(...args));
 });
+
+router.post('/upgrade-subscription', helper.verify, async (...args) => {
+    await doRequest(args, async (...args) => await usersContainer.HandleUpgradeSubscription(...args));
+});
+
+router.post('/finish-upgrade', async (...args) => {
+    await doRequest(args, async (...args) => await usersContainer.HandleFinishUpgrade(...args));
+});
 module.exports = router;

@@ -263,6 +263,68 @@ class PG {
             resolve();
         });
     }
+
+    async SetWaiting(userId, subscription, txn_hash) {
+        const query = `INSERT INTO waiting_update (user_id, new_subscription, txn_hash)
+                       VALUES ($1, $2, $3)`;
+        let values = [userId, subscription, txn_hash];
+        const client = this.client;
+        await new Promise((resolve) => {
+            client.query(query, values, (err) => {
+                if (err) {
+                    console.error(err);
+                    throw err;
+                }
+            });
+            resolve();
+        });
+    }
+
+    async getSubs(txn_hash) {
+        const query = `SELECT *
+                       FROM waiting_update
+                       where txn_hash = '${txn_hash}'`;
+        const client = this.client;
+        return await new Promise((resolve) => {
+            client.query(query, (err, res) => {
+                if (err) {
+                    console.log(err);
+                    throw err;
+                }
+                resolve(res.rows[0]);
+            });
+        });
+    }
+
+    async removeSubscription(txn_hash) {
+        const query = `DELETE
+                       FROM waiting_update
+                       where txn_hash = '${txn_hash}'`;
+        const client = this.client;
+        return await new Promise((resolve) => {
+            client.query(query, (err, res) => {
+                if (err) {
+                    console.log(err);
+                    throw err;
+                }
+                resolve();
+            });
+        });
+    }
+
+    async updateSubscription(userId, subscription) {
+        const query = `UPDATE profile_user SET subscription = '${subscription}' where user_id = ${userId}`;
+        const client = this.client;
+        return await new Promise((resolve) => {
+            client.query(query, (err, res) => {
+                if (err) {
+                    console.log(err);
+                    throw err;
+                }
+                resolve();
+            });
+        });
+    }
 }
 
 module.exports = PG;
