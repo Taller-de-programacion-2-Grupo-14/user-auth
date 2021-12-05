@@ -302,7 +302,7 @@ class PG {
                        where txn_hash = '${txn_hash}'`;
         const client = this.client;
         return await new Promise((resolve) => {
-            client.query(query, (err, res) => {
+            client.query(query, (err) => {
                 if (err) {
                     console.log(err);
                     throw err;
@@ -316,7 +316,7 @@ class PG {
         const query = `UPDATE profile_user SET subscription = '${subscription}' where user_id = ${userId}`;
         const client = this.client;
         return await new Promise((resolve) => {
-            client.query(query, (err, res) => {
+            client.query(query, (err) => {
                 if (err) {
                     console.log(err);
                     throw err;

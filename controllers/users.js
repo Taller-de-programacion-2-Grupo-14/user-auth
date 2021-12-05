@@ -6,7 +6,7 @@ const possibleMatches = {
     'basico': 'free',
     'estandar': 'platinum',
     'premium': 'black'
-}
+};
 class Users {
     constructor(service, ddService) {
         this.service = service;
@@ -239,7 +239,7 @@ class Users {
     async HandleUpgradeSubscription(req, res) {
         let id = req.decoded.id;
         req.body.subscription = req.body.subscription || '';
-        let subs = possibleMatches[req.body.subscription.toLowerCase()]
+        let subs = possibleMatches[req.body.subscription.toLowerCase()];
         if (!subs) {
             let e = new Error(`invalid status received, expected a valid one, received ${res.body.subscription}`);
             e.status = 400;
@@ -250,7 +250,7 @@ class Users {
     }
 
     async HandleFinishUpgrade(req, res) {
-        this.service.finishUpgrade(req.body.status ==='ok', req.body.txn_hash).then(res.json({message: 'status changed correctly'}))
+        this.service.finishUpgrade(req.body.status ==='ok', req.body.txn_hash).then(res.json({message: 'status changed correctly'}));
     }
 }
 

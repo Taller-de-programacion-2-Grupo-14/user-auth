@@ -5,7 +5,7 @@ const pricing ={
     'free': 0,
     'platinum': 0.0001,
     'black': 0.0002
-}
+};
 class UserService {
     constructor(db, sender) {
         this.sender = sender;
@@ -172,8 +172,8 @@ class UserService {
                 amountInEthers: `${price}`
             }),
             method: 'POST'
-        }
-        let res = await (await fetch(`${process.env.PAYMENTS_API}/deposit`, data)).json()
+        };
+        let res = await (await fetch(`${process.env.PAYMENTS_API}/deposit`, data)).json();
         if (res.statusCode > 299) {
             let e = new Error(res.message);
             e.status = res.statusCode;
@@ -181,7 +181,7 @@ class UserService {
         }
 
         await this.db.SetWaiting(id, subs, res.hash);
-        return res
+        return res;
     }
 
     async finishUpgrade(status, txn_hash) {
