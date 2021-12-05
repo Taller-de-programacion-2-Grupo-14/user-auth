@@ -408,6 +408,8 @@ paths:
           description: Token invalido
         '403':
           description: No token provisto
+        '500':
+          description: No se pudo generar la transaccion
 
 components:
   schemas:
