@@ -191,6 +191,27 @@ class UserService {
         }
         this.db.removeSubscription(txn_hash).then(() => console.log('subscription waiting removed correctly'));
     }
+
+    async SendPayment(info) {
+        let data = {
+            headers: {
+                'x-access-token': info.requested_by,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                receiverId: info.receiver,
+                amountInEthers: `${info.amount}`
+            }),
+            method: 'POST'
+        };
+        let res = await (await fetch(`${process.env.PAYMENTS_API}/send-payment`, data)).json();
+        if (res.statusCode > 299) {
+            let e = new Error(res.message);
+            e.status = res.statusCode;
+            throw e;
+        }
+        return res;
+    }
 }
 
 module.exports = UserService;

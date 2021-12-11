@@ -252,6 +252,21 @@ class Users {
     async HandleFinishUpgrade(req, res) {
         this.service.finishUpgrade(req.body.status ==='ok', req.body.txn_hash).then(res.json({message: 'status changed correctly'}));
     }
+
+    async HandleSendPayment(req, res) {
+        if (!req.decoded.is_admin) {
+            let e = new Error('user has no permissions to access this service');
+            e.status = 403;
+            throw e;
+        }
+        let info = {
+            requested_by: req.body.app_token,
+            amount: req.body.amount,
+            receiver: req.body.receiver
+        }
+        let txn = await this.service.SendPayment(info)
+        res.json({message: 'txn asked correctly', txn: txn.hash, status: 200});
+    }
 }
 
 module.exports = Users;
