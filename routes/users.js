@@ -160,4 +160,8 @@ router.post('/upgrade-subscription', helper.verify, async (...args) => {
 router.post('/finish-upgrade', async (...args) => {
     await doRequest(args, async (...args) => await usersContainer.HandleFinishUpgrade(...args));
 });
+
+router.post('/give-payment', helper.verify, validateSchema('give-payment'), async (...args)=> {
+    await doRequest(args, async(...args) => await usersContainer.HandleSendPayment(...args));
+});
 module.exports = router;
