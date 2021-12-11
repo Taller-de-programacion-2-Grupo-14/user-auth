@@ -1,0 +1,23 @@
+{
+  "title": "give payment",
+  "description": "describes properties required to send payment to a user",
+  "type": "object",
+  "properties": {
+    "receiver": {
+      "type": "integer",
+      "description": "id of user that will receive money",
+      "minimum": 0
+    },
+    "amount": {
+      "type": "number",
+      "description": "amount to give",
+      "minimum": 0,
+      "maximum": 0.01
+    },
+    "api-token": {
+      "type": "string",
+      "description": "token of the api that send the request"
+    }
+  },
+  "required": ["receiver", "amount", "api-token"]
+}

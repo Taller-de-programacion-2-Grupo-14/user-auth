@@ -410,6 +410,39 @@ paths:
           description: No token provisto
         '500':
           description: No se pudo generar la transaccion
+  '/users/give-payment':
+    'post':
+      tags:
+        - User
+      description: Entrega dinero desde nuestra aplicacion a usuario que se eliga
+      parameters:
+        - in: header
+          name: x-access-token
+          required: true
+          description: token recibido de login
+      requestBody:
+        description: body para el upgrade del usuario
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/give-payment'
+      responses:
+        '200':
+          description: transaction created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responseFromPayments'
+
+        '400':
+          description: Bad request
+        '401':
+          description: Token invalido
+        '403':
+          description: No token provisto
+        '500':
+          description: No se pudo generar la transaccion
 
 components:
   schemas:
@@ -581,3 +614,19 @@ components:
         txn_hash:
           type: string
           description: transaction hash a ser devuelto para que el usuario pueda chequear el estado de su transaccion desde su wallet
+    give-payment:
+      type: object
+      properties:
+        amount:
+          type: integer
+          example: 0.001
+          description: dinero a enviar al usuario, no puede ser mayor a 0.1 por cuestiones de limitaciones de wallet
+        receiver:
+          type: integer
+          example: 27
+          description: usuario que recibira el dinero
+        api_token:
+          type: string
+          example: pepito-popotote
+          description: token entregado desde la aplicacion para identificar otras apis
+

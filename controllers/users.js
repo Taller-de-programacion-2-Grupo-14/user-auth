@@ -263,8 +263,8 @@ class Users {
             requested_by: req.body.app_token,
             amount: req.body.amount,
             receiver: req.body.receiver
-        }
-        let txn = await this.service.SendPayment(info)
+        };
+        let txn = await this.service.SendPayment(info);
         res.json({message: 'txn asked correctly', txn: txn.hash, status: 200});
     }
 }
