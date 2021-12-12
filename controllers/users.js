@@ -233,7 +233,11 @@ class Users {
             throw e;
         }
         let response = await this.service.GetToken(userId);
-        res.json(response);
+        if (response) {
+            res.json(response);
+        } else {
+            res.status(204).send('{}');
+        }
     }
 
     async HandleUpgradeSubscription(req, res) {
