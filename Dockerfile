@@ -3,9 +3,7 @@ FROM node:14
 
 # Create app directory
 WORKDIR /usr/src/app
-# Install GPG dependencies
-RUN apt-get update \
- && apt-get install -y gnupg apt-transport-https gpg-agent curl ca-certificates
+RUN apt-get install -y gpg apt-transport-https gpg-agent curl ca-certificates
 
 # Add Datadog repository and signing keys
 ENV DATADOG_APT_KEYRING="/usr/share/keyrings/datadog-archive-keyring.gpg"
@@ -18,19 +16,21 @@ RUN curl -o /tmp/DATADOG_APT_KEY_F14F620E.public "${DATADOG_APT_KEYS_URL}/DATADO
     gpg --ignore-time-conflict --no-default-keyring --keyring ${DATADOG_APT_KEYRING} --import /tmp/DATADOG_APT_KEY_F14F620E.public
 RUN curl -o /tmp/DATADOG_APT_KEY_382E94DE.public "${DATADOG_APT_KEYS_URL}/DATADOG_APT_KEY_382E94DE.public" && \
     gpg --ignore-time-conflict --no-default-keyring --keyring ${DATADOG_APT_KEYRING} --import /tmp/DATADOG_APT_KEY_382E94DE.public
+# Install the Datadog agent
+RUN apt-get update && apt-get -y --force-yes install --reinstall datadog-agent
 
 
 # Install the Datadog Agent
 RUN apt-get update && apt-get -y --force-yes install --reinstall datadog-agent
 
 # Copy entrypoint
-COPY entrypoint.sh /
+COPY heroku/heroku-entrypoint.sh ./
 
 # Expose DogStatsD and trace-agent ports
 EXPOSE 8125/udp 8126/tcp
-
+ENV DD_APM_ENABLED=true
 # Copy your Datadog configuration
-COPY datadog-config/ /etc/datadog-agent/
+COPY heroku/datadog-config/ /etc/datadog-agent/
 
 CMD ["/entrypoint.sh"]
 # Install app dependencies
