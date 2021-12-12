@@ -47,4 +47,4 @@ COPY . .
 ENV secret="Branca me rompio la tele"
 ENV algorithm="HS256"
 EXPOSE 8080
-CMD [ "npm", "start" ]
+CMD [ "bash", "heroku-entrypoint.sh" ]
