@@ -148,7 +148,7 @@ router.post('/set-token', helper.verify, validateSchema('token'), async (...args
     await doRequest(args, async(...args) => await usersContainer.HandleSetToken(...args));
 });
 
-router.get('/get-token/:id', helper.verify, async (...args)=> {
+router.get('/get-token/:id', async (...args)=> {
     await doRequest(args, async(...args) => await usersContainer.HandleGetToken(...args));
 });
 
