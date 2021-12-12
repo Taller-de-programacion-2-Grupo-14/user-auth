@@ -14,10 +14,10 @@
       "minimum": 0,
       "maximum": 0.01
     },
-    "api-token": {
+    "api_token": {
       "type": "string",
       "description": "token of the api that send the request"
     }
   },
-  "required": ["receiver", "amount", "api-token"]
+  "required": ["receiver", "amount", "api_token"]
 }

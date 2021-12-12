@@ -1,6 +1,5 @@
 /*global process*/
-const tracer = require('dd-trace').init({
-    logInjection: true, runtimeMetrics: true});
+const tracer = require('dd-trace').init();
 const logger = require('./Logger');
 let express = require('express');
 let router = express.Router();

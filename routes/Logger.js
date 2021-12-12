@@ -11,6 +11,7 @@ class Logger {
 
         if (span) {
             this.tracer.inject(span.context(), formats.LOG, record);
+            console.log('se mando una trace a dd');
         }
 
         console.log(JSON.stringify(record));
