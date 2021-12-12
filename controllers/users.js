@@ -260,7 +260,7 @@ class Users {
             throw e;
         }
         let info = {
-            requested_by: req.body.app_token,
+            requested_by: req.body.api_token,
             amount: req.body.amount,
             receiver: req.body.receiver
         };
