@@ -5,6 +5,8 @@ let StatsD = require('hot-shots');
 let dogstatsd = new StatsD();
 const USER_CREATED = 'user-auth.user_created';
 const USER_CHANGE_SUBS = 'user_upgrade';
+const USER_BLOCKED = 'user-auth.user_blocked';
+const PASSWORDS_RECOVERED = 'user-auth.passwords_recovered';
 const pricing ={
     'free': 0,
     'platinum': 0.0001,
@@ -116,6 +118,7 @@ class UserService {
 
     async ChangePassword(information) {
         await this.db.UpdateUserRegistry(information);
+        dogstatsd.increment(PASSWORDS_RECOVERED);
     }
 
     async GetBatchUsers(ids) {
@@ -136,10 +139,12 @@ class UserService {
 
     async BlockUser(id) {
         await this.db.SetBlocked(id, true);
+        dogstatsd.increment(USER_BLOCKED);
     }
 
     async UnblockUser(id) {
         await this.db.SetBlocked(id, false);
+        dogstatsd.decrement(USER_BLOCKED);
     }
 
     async SetAdmin(id) {
