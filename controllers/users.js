@@ -1,7 +1,5 @@
 /*global process*/
 const jwt = require('jsonwebtoken');
-let StatsD = require('hot-shots');
-let dogstatsd = new StatsD();
 const possibleMatches = {
     'basico': 'free',
     'estandar': 'platinum',
@@ -220,7 +218,6 @@ class Users {
         };
         await this.service.SetToken(body);
         this.logger.log('info', 'token added');
-        dogstatsd.increment('tokens.set');
         res.json({message: `user_id ${body.user_id} token was added correctly`, status: 200});
     }
 

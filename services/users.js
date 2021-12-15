@@ -1,6 +1,10 @@
 /*global process*/
 const jwt = require('jsonwebtoken');
 const fetch = require('cross-fetch');
+let StatsD = require('hot-shots');
+let dogstatsd = new StatsD();
+const USER_CREATED = 'user-auth.user_created';
+const USER_CHANGE_SUBS = 'user_upgrade';
 const pricing ={
     'free': 0,
     'platinum': 0.0001,
@@ -19,6 +23,7 @@ class UserService {
             userData = await this.db.GetPrivateUserInfo(values.email);
             values.id = userData.id;
             await this.db.AddUserProfile(values);
+            dogstatsd.increment(USER_CREATED);
         } else {
             let e = new Error('user already registered');
             e.status = 400;
@@ -84,6 +89,7 @@ class UserService {
         let userInfo = await this.db.GetPrivateUserInfo(information.email);
         this.throwIfInvalidUser(userInfo, information, false);
         await this.db.DeleteUser(information);
+        dogstatsd.decrement(USER_CREATED);
     }
 
     async SendTokenToRetry(email) {
@@ -141,6 +147,7 @@ class UserService {
     }
 
     async SetToken(body) {
+        dogstatsd.increment(USER_CREATED); //ToDO delete this
         let wasAdded = await this.db.GetToken(body.user_id);
         if (wasAdded) {
             await this.db.UpdateToken(body);
@@ -187,7 +194,10 @@ class UserService {
     async finishUpgrade(status, txn_hash) {
         if (status) {
             let data = await this.db.getSubs(txn_hash);
-            this.db.updateSubscription(data.user_id, data.new_subscription).then(()=> console.log('status of user updated correctly'));
+            this.db.updateSubscription(data.user_id, data.new_subscription).then(()=> {
+                console.log('status of user updated correctly');
+                dogstatsd.increment(`${USER_CHANGE_SUBS}.${data.new_subscription}`);
+            });
         }
         this.db.removeSubscription(txn_hash).then(() => console.log('subscription waiting removed correctly'));
     }
