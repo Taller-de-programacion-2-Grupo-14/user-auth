@@ -1,7 +1,7 @@
 /*global process*/
 const jwt = require('jsonwebtoken');
 let StatsD = require('hot-shots');
-let dogstatsd = new StatsD({host:'datadoghq.com'});
+let dogstatsd = new StatsD();
 const possibleMatches = {
     'basico': 'free',
     'estandar': 'platinum',
