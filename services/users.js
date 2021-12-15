@@ -147,7 +147,6 @@ class UserService {
     }
 
     async SetToken(body) {
-        dogstatsd.increment(USER_CREATED); //ToDO delete this
         let wasAdded = await this.db.GetToken(body.user_id);
         if (wasAdded) {
             await this.db.UpdateToken(body);
