@@ -1,7 +1,7 @@
 /*global process*/
 let StatsD = require('hot-shots');
 let dogstatsd = new StatsD();
-const USER_LOGIN = 'user_auth.user_login'
+const USER_LOGIN = 'user_auth.user_login';
 const tracer = require('dd-trace').init();
 const logger = require('./Logger');
 let express = require('express');
@@ -58,7 +58,7 @@ router.post('/', validateSchema('new-user'), async (...args) => {
 
 router.post('/login', validateSchema('login-user'), async (...args) => {
     await doRequest(args, async(...args) => await usersContainer.HandleUserLogin(...args));
-    dogstatsd.increment('user_auth.user_login.mail')
+    dogstatsd.increment(USER_LOGIN + '.mail');
 });
 
 async function doRequest(args, method) {
@@ -100,7 +100,7 @@ router.post('/login/firebase', async (req, res, next) => {
         if (shouldRegisterUser) {
             let copyRes = helper.getNullRes();
             await usersContainer.HandleUserPost(req, copyRes);
-            dogstatsd.increment('user_auth.user_created_firebase')
+            dogstatsd.increment('user_auth.user_created_firebase');
         }
         next();
     } catch (e) {
@@ -109,7 +109,7 @@ router.post('/login/firebase', async (req, res, next) => {
     }
 }, async (...args) => {
     await doRequest(args, async(...args) => await usersContainer.HandleUserLogin(...args));
-    dogstatsd.increment('user_auth.user_login.firebase')
+    dogstatsd.increment(USER_LOGIN + '.firebase');
 });
 
 router.get('/batch', async (...args) => {
@@ -148,7 +148,7 @@ router.post('/add-admin', helper.verify, validateSchema('new-user'), async (req,
     }
 }, async (...args) => {
     await doRequest(args, async(...args) => await usersContainer.HandleUserLogin(...args));
-    dogstatsd.increment('user_auth.user_login.admin')
+    dogstatsd.increment(USER_LOGIN + '.admin');
 });
 
 router.post('/set-token', helper.verify, validateSchema('token'), async (...args)=> {
