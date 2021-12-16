@@ -65,7 +65,7 @@ class Users {
         }
         let userInfo = await this.service.GetUser(email, id);
         if (wallet) {
-            userInfo.wallet = wallet;
+            userInfo.wallet_id = wallet;
         }
         this.throwIfNotFound(userInfo);
         res.json(userInfo);
