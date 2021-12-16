@@ -1,5 +1,6 @@
 /*global process*/
 const jwt = require('jsonwebtoken');
+const fetch = require('cross-fetch');
 const possibleMatches = {
     'basico': 'free',
     'estandar': 'platinum',
@@ -41,6 +42,7 @@ class Users {
     async HandleUserGet(req, res) {
         let email = req.query.email;
         let id = req.query.id;
+        let wallet = undefined;
         if (id) {
             if (id < 1) {
                 let e = new Error('invalid id, can not be less than zero');
@@ -57,8 +59,14 @@ class Users {
                 throw e;
             }
             email = tokenParsed.email;
+            let data = await (await fetch(`${process.env.PAYMENTS_API}wallet/${tokenParsed.id}`, {method: 'GET'})).json();
+            wallet = data.wallet;
+
         }
         let userInfo = await this.service.GetUser(email, id);
+        if (wallet) {
+            userInfo.wallet = wallet;
+        }
         this.throwIfNotFound(userInfo);
         res.json(userInfo);
     }
