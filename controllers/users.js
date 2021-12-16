@@ -64,10 +64,10 @@ class Users {
 
         }
         let userInfo = await this.service.GetUser(email, id);
+        this.throwIfNotFound(userInfo);
         if (wallet) {
             userInfo.wallet_id = wallet;
         }
-        this.throwIfNotFound(userInfo);
         res.json(userInfo);
     }
 
