@@ -1,6 +1,5 @@
 /*global process*/
 const jwt = require('jsonwebtoken');
-const fetch = require('cross-fetch');
 let StatsD = require('hot-shots');
 let dogstatsd = new StatsD();
 const USER_CREATED = 'user-auth.user_created';
@@ -13,9 +12,10 @@ const pricing ={
     'black': 0.0002
 };
 class UserService {
-    constructor(db, sender) {
+    constructor(db, sender, paymentsClient) {
         this.sender = sender;
         this.db = db;
+        this.payments = paymentsClient;
     }
 
     async AddUser(values) {
@@ -173,24 +173,7 @@ class UserService {
             e.status = 400;
             throw e;
         }
-        let data = {
-            headers: {
-                'x-access-token': process.env.API_TOKEN,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                senderId: id,
-                amountInEthers: `${price}`
-            }),
-            method: 'POST'
-        };
-        let res = await (await fetch(`${process.env.PAYMENTS_API}/deposit`, data)).json();
-        if (res.statusCode > 299) {
-            let e = new Error(res.message);
-            e.status = res.statusCode;
-            throw e;
-        }
-
+        let res = await this.payments.deposit(id, price);
         await this.db.SetWaiting(id, subs, res.hash);
         return res;
     }
@@ -207,24 +190,7 @@ class UserService {
     }
 
     async SendPayment(info) {
-        let data = {
-            headers: {
-                'x-access-token': info.requested_by,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                receiverId: info.receiver,
-                amountInEthers: `${info.amount}`
-            }),
-            method: 'POST'
-        };
-        let res = await (await fetch(`${process.env.PAYMENTS_API}/send-payment`, data)).json();
-        if (res.statusCode > 299) {
-            let e = new Error(res.message);
-            e.status = res.statusCode;
-            throw e;
-        }
-        return res;
+        return this.payments.SendPayment(info);
     }
 }
 
