@@ -1,15 +1,15 @@
 /*global process*/
 const jwt = require('jsonwebtoken');
-const fetch = require('cross-fetch');
 const possibleMatches = {
     'basico': 'free',
     'estandar': 'platinum',
     'premium': 'black'
 };
 class Users {
-    constructor(service, ddService) {
+    constructor(service, ddService, paymentsClient) {
         this.service = service;
         this.logger = ddService;
+        this.payments = paymentsClient;
     }
 
     async HandleUserPost(req, res) {
@@ -59,9 +59,8 @@ class Users {
                 throw e;
             }
             email = tokenParsed.email;
-            let data = await (await fetch(`${process.env.PAYMENTS_API}wallet/${tokenParsed.id}`, {method: 'GET'})).json();
+            let data = await this.payments.GetWallet(tokenParsed.id);
             wallet = data.wallet;
-
         }
         let userInfo = await this.service.GetUser(email, id);
         this.throwIfNotFound(userInfo);
