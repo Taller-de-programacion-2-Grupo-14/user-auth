@@ -69,7 +69,7 @@ class Payments {
             }),
             method: 'POST'
         };
-        let res = await fetch(`${this.host}/createWallet`, data);
+        let res = await fetch(`${this.host}/wallet`, data);
         if (res.status > 299 || !res.ok) {
             console.log('wallet could not be created');
         }
