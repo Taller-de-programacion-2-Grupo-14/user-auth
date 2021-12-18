@@ -1,4 +1,5 @@
-import fetch from "cross-fetch";
+/*global process*/
+const fetch = require('cross-fetch');
 
 class Payments {
     constructor() {
@@ -8,12 +9,12 @@ class Payments {
     async GetWallet(id) {
         const data = {
             method: 'GET'
-        }
-        let res = await fetch(`${process.env.PAYMENTS_API}wallet/${id}`, data)
+        };
+        let res = await fetch(`${process.env.PAYMENTS_API}wallet/${id}`, data);
         if (!res.ok || res.status > 299) {
             return {};
         }
-        return res.json()
+        return res.json();
     }
 
     async deposit(id, price) {
@@ -55,6 +56,8 @@ class Payments {
             e.status = res.statusCode;
             throw e;
         }
-        return res.json()
+        return res.json();
     }
 }
+
+module.exports = Payments;
