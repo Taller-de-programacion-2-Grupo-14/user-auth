@@ -223,6 +223,7 @@ class Users {
             user_id: req.decoded.id,
             token: req.body.token
         };
+        this.logger.log('debug', `info retrieved ${body}`);
         await this.service.SetToken(body);
         this.logger.log('info', 'token added');
         res.json({message: `user_id ${body.user_id} token was added correctly`, status: 200});

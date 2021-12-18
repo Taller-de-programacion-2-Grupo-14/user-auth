@@ -219,7 +219,7 @@ class PG {
         let user_id = data.user_id;
         let token = data.token;
         const query = `INSERT INTO user_tokens (user_id, token)
-                       VALUES ('${user_id}', '${token}')`;
+                       VALUES (${user_id}, ${token})`;
         const client = this.client;
         await new Promise((resolve) => {
             client.query(query, (err) => {
