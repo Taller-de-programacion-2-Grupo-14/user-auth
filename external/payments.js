@@ -10,7 +10,7 @@ class Payments {
         const data = {
             method: 'GET'
         };
-        let res = await fetch(`${process.env.PAYMENTS_API}wallet/${id}`, data);
+        let res = await fetch(`${this.host}/wallet/${id}`, data);
         if (!res.ok || res.status > 299) {
             return {};
         }
@@ -29,7 +29,7 @@ class Payments {
             }),
             method: 'POST'
         };
-        let res = await fetch(`${process.env.PAYMENTS_API}/deposit`, data);
+        let res = await fetch(`${this.host}/deposit`, data);
         if (res.status > 299 || !res.ok) {
             let e = new Error(res.message);
             e.status = res.statusCode;
@@ -50,13 +50,29 @@ class Payments {
             }),
             method: 'POST'
         };
-        let res = await fetch(`${process.env.PAYMENTS_API}/send-payment`, data);
+        let res = await fetch(`${this.host}/send-payment`, data);
         if (res.status > 299 || !res.ok) {
             let e = new Error(res.message);
             e.status = res.statusCode;
             throw e;
         }
         return res.json();
+    }
+
+    async createWallet(id) {
+        let data = {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                id: id
+            }),
+            method: 'POST'
+        };
+        let res = await fetch(`${this.host}/createWallet`, data);
+        if (res.status > 299 || !res.ok) {
+            console.log('wallet could not be created');
+        }
     }
 }
 
