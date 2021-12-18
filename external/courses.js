@@ -26,3 +26,5 @@ class Courses {
         return res.json();
     }
 }
+
+module.exports = Courses;

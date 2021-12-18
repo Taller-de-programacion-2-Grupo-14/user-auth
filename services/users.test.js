@@ -14,8 +14,9 @@ describe('services.js tests', () => {
 
     test('User is added correctly', async () => {
         let mockDB = {GetPrivateUserInfo: jest.fn(), AddUser: jest.fn(), AddUserProfile: jest.fn()};
+        let paymentClientMock = {createWallet: jest.fn()};
         mockDB.GetPrivateUserInfo.mockReturnValueOnce(null).mockReturnValueOnce({id: FAKE_ID});
-        let service = new UserService(mockDB, null);
+        let service = new UserService(mockDB, null, paymentClientMock);
         expect(await service.AddUser({id: FAKE_ID, email: FAKE_EMAIL})).toBe(true);
         expect(mockDB.GetPrivateUserInfo.mock.calls.length).toBe(2);
         expect(mockDB.GetPrivateUserInfo.mock.calls[0][0]).toBe(FAKE_EMAIL);

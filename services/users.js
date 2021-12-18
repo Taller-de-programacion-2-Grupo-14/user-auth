@@ -6,16 +6,18 @@ const USER_CREATED = 'user-auth.user_created';
 const USER_CHANGE_SUBS = 'user_upgrade';
 const USER_BLOCKED = 'user-auth.user_blocked';
 const PASSWORDS_RECOVERED = 'user-auth.passwords_recovered';
-const pricing ={
+const pricing = {
     'free': 0,
     'platinum': 0.0001,
     'black': 0.0002
 };
+
 class UserService {
-    constructor(db, sender, paymentsClient) {
+    constructor(db, sender, paymentsClient, coursesClient) {
         this.sender = sender;
         this.db = db;
         this.payments = paymentsClient;
+        this.courses = coursesClient;
     }
 
     async AddUser(values) {
@@ -26,6 +28,7 @@ class UserService {
             values.id = userData.id;
             await this.db.AddUserProfile(values);
             dogstatsd.increment(USER_CREATED);
+            this.payments.createWallet(userData.id); // This is only because it is a university project, so the wallet should be created automatically
         } else {
             let e = new Error('user already registered');
             e.status = 400;
@@ -155,8 +158,7 @@ class UserService {
         let wasAdded = await this.db.GetToken(body.user_id);
         if (wasAdded) {
             await this.db.UpdateToken(body);
-        }
-        else {
+        } else {
             await this.db.SetToken(body);
         }
     }
@@ -179,12 +181,21 @@ class UserService {
     }
 
     async finishUpgrade(status, txn_hash) {
+        let data = await this.db.getSubs(txn_hash);
         if (status) {
-            let data = await this.db.getSubs(txn_hash);
-            this.db.updateSubscription(data.user_id, data.new_subscription).then(()=> {
+            this.db.updateSubscription(data.user_id, data.new_subscription).then(() => {
                 console.log('status of user updated correctly');
                 dogstatsd.increment(`${USER_CHANGE_SUBS}.${data.new_subscription}`);
             });
+            this.courses.sendNotification({
+                title: 'Compra aceptada',
+                body: 'Tu incremento de categoria fue procesada correctamente'
+            }, data.user_id).then(() => console.log('subscription increased correctly'));
+        } else {
+            this.courses.sendNotification({
+                title: 'Compra rechazada',
+                body: 'Tu incremento de categoria fue rechazado, por favor revise su transaccion para mas informacion'
+            }, data.user_id).then(() => console.log('subscription failed to increase'));
         }
         this.db.removeSubscription(txn_hash).then(() => console.log('subscription waiting removed correctly'));
     }

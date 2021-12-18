@@ -13,6 +13,7 @@ const Firebase = require('../controllers/firebase');
 const persistence = require('../persistence/postgre');
 const helper = require('./helper');
 const payments = require('../external/payments');
+const courses = require('../external/courses');
 require('jsonwebtoken');
 console.log(process.env.DATABASE_URL || process.env.DB_URL);
 const {Client} = require('pg');
@@ -51,7 +52,7 @@ function errorHandler(err, req, res) {
 let db = new persistence(client);
 /* GET users listing. */
 let paymentsClient = new payments();
-let userService = new UserService(db, transporter, paymentsClient);
+let userService = new UserService(db, transporter, paymentsClient, new courses());
 let usersContainer = new Users(userService, new logger(tracer), paymentsClient);
 let firebase = new Firebase(db);
 router.post('/', validateSchema('new-user'), async (...args) => {
