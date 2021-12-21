@@ -170,14 +170,24 @@ class UserService {
     async UpgradeUser(id, subs) {
         let info = await this.GetUser('', id);
         let price = pricing[subs] - pricing[info.subscription];
-        if (price <= 0) {
+        if (info.subscription === subs) {
             let e = new Error(`invalid change from ${info.subscription} to ${subs}`);
             e.status = 400;
             throw e;
         }
-        let res = await this.payments.deposit(id, price);
-        await this.db.SetWaiting(id, subs, res.hash);
-        return res;
+        if (price <= 0) {
+            await this.db.updateSubscription(id, info.subscription);
+            dogstatsd.increment(`${USER_CHANGE_SUBS}.${info.subscription}`);
+            this.payments.sendNotification({
+                title: 'Modificacion exitosa',
+                body: 'tu nueva subscripcion fue agregada correctamente'
+            }, id).then(() => console.log('modificacion de estado exitosa'));
+            return {hash: 'NOOP'};
+        } else {
+            let res = await this.payments.deposit(id, price);
+            await this.db.SetWaiting(id, subs, res.hash);
+            return res;
+        }
     }
 
     async finishUpgrade(status, txn_hash) {
