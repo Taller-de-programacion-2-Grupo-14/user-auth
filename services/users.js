@@ -178,7 +178,7 @@ class UserService {
         if (price <= 0) {
             await this.db.updateSubscription(id, info.subscription);
             dogstatsd.increment(`${USER_CHANGE_SUBS}.${info.subscription}`);
-            this.payments.sendNotification({
+            this.courses.sendNotification({
                 title: 'Modificacion exitosa',
                 body: 'tu nueva subscripcion fue agregada correctamente'
             }, id).then(() => console.log('modificacion de estado exitosa'));
