@@ -44,7 +44,8 @@ class Users {
         let id = req.query.id;
         let wallet = undefined;
         if (id) {
-            if (id < 1) {
+            id = parseInt(id);
+            if (!id || id < 1) {
                 let e = new Error('invalid id, can not be less than zero');
                 e.status = 400;
                 throw e;
