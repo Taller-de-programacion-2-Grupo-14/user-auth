@@ -382,4 +382,102 @@ describe('controller.js tests', () => {
         }, res);
         expect(jsonResponse.data.status).toBe(200);
     });
+
+    test('HandleSetToken only delegate to service', async () => {
+        let jsonResponse = {};
+        let res = {
+            json: jest.fn((data) => {
+                jsonResponse.data = data;
+            }), status: jest.fn()
+        };
+        let mockService = {SetToken: jest.fn()};
+        let controller = new Users(mockService, {log: jest.fn()});
+        await controller.HandleSetToken({body: {}, decoded: {}}, res);
+        expect(jsonResponse.data.status).toBe(200);
+    });
+
+    test('HandleGetToken if invalid id error is thrown', async () => {
+        let controller = new Users();
+        let ok = true;
+        let e = {status: 418};
+        try {
+            await controller.HandleGetToken({param: jest.fn().mockReturnValueOnce('cositote')})
+        } catch (er) {
+            e = er;
+            ok = false;
+        }
+        expect(e.status).toBe(400);
+        expect(ok).toBeFalsy();
+    });
+
+    test('HandleGetToken delegates responsibility if ok', async () => {
+        let jsonResponse = {};
+        let response = {'somethingUnique': 'reallyunique'}
+        let res = {
+            json: jest.fn((data) => {
+                jsonResponse.data = data;
+            }), status: jest.fn()
+        };
+        let mockService = {GetToken: jest.fn().mockReturnValueOnce(response)};
+        let controller = new Users(mockService, {log: jest.fn()});
+        await controller.HandleGetToken({param: jest.fn().mockReturnValueOnce(1)}, res);
+        expect(jsonResponse.data).toBe(response);
+    });
+
+    test('HandleUpgradeSubscription throws error if sub not possible', async () => {
+        let controller = new Users();
+        let ok = true;
+        let e = {status: 418};
+        try {
+            await controller.HandleUpgradeSubscription({body: {subscription: 'sarasa'}, decoded: {}})
+        } catch (er) {
+            e = er;
+            ok = false;
+        }
+        expect(e.status).toBe(400);
+        expect(ok).toBeFalsy();
+    });
+
+
+    test('HandleUpgradeSubscription delegates responsibility if ok', async () => {
+        let jsonResponse = {};
+        let res = {
+            json: jest.fn((data) => {
+                jsonResponse.data = data;
+            }), status: jest.fn()
+        };
+        let mockService = {UpgradeUser: jest.fn().mockReturnValueOnce({})};
+        let controller = new Users(mockService, {log: jest.fn()});
+        await controller.HandleUpgradeSubscription({decoded: {id: 1}, body: {subscription: 'BasIco'}}, res);
+        expect(jsonResponse.data.status).toBe(200);
+        expect(jsonResponse.data.txn).toBeUndefined();
+    });
+
+    test('HandleSendPayment throws error if not admin', async () => {
+        let controller = new Users();
+        let ok = true;
+        let e = {status: 418};
+        try {
+            await controller.HandleSendPayment({decoded: {is_admin: false}});
+        } catch (er) {
+            e = er;
+            ok = false;
+        }
+        expect(e.status).toBe(403);
+        expect(ok).toBeFalsy();
+    });
+
+    test('HandleSendPayment delegates responsibility if ok', async () => {
+        let jsonResponse = {};
+        let res = {
+            json: jest.fn((data) => {
+                jsonResponse.data = data;
+            }), status: jest.fn()
+        };
+        let mockService = {SendPayment: jest.fn().mockReturnValueOnce({})};
+        let controller = new Users(mockService, {log: jest.fn()});
+        await controller.HandleSendPayment({decoded: {is_admin: true}, body: {}}, res);
+        expect(jsonResponse.data.status).toBe(200);
+        expect(jsonResponse.data.txn).toBeUndefined();
+    });
 });
