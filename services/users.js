@@ -134,9 +134,10 @@ class UserService {
             offset: query.offset || 0,
             blocked: query.blocked,
             email: query.email,
-            subscription: query.subscription
+            subscription: query.subscription,
+            notEmail: query.not_email
         };
-        let queryFilters = Object.entries(filters).filter((v) => v[1] !== undefined);
+        let queryFilters = Object.entries(filters).filter((v) => v[1] !== undefined && v[1] !== '');
         return this.db.GetUsers(queryFilters);
     }
 
