@@ -250,7 +250,7 @@ class Users {
         req.body.subscription = req.body.subscription || '';
         let subs = possibleMatches[req.body.subscription.toLowerCase()];
         if (!subs) {
-            let e = new Error(`invalid status received, expected a valid one, received ${res.body.subscription}`);
+            let e = new Error(`invalid status received, expected a valid one, received ${req.body.subscription}`);
             e.status = 400;
             throw e;
         }
