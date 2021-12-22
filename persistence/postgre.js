@@ -161,7 +161,7 @@ class PG {
                 if (v[0] === 'email') {
                     filter = ` ${v[0]} LIKE '%${v[1]}%'`;
                 } else if (v[0] === 'notEmail') {
-                    filter = ` ${v[0]} NOT LIKE '%${v[1]}%'`;
+                    filter = ` email NOT LIKE '%${v[1]}%'`;
                 } else {
                     filter = ` ${v[0]} = '${v[1]}'`;
                 }
