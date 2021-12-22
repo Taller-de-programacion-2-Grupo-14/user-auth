@@ -155,7 +155,7 @@ class UserService {
     }
 
     async SetToken(body) {
-        let wasAdded = await this.db.GetToken(body.user_id);
+        let wasAdded = await this.GetToken(body.user_id);
         if (wasAdded) {
             await this.db.UpdateToken(body);
         } else {
@@ -169,12 +169,12 @@ class UserService {
 
     async UpgradeUser(id, subs) {
         let info = await this.GetUser('', id);
-        let price = pricing[subs] - pricing[info.subscription];
         if (info.subscription === subs) {
             let e = new Error(`invalid change from ${info.subscription} to ${subs}`);
             e.status = 400;
             throw e;
         }
+        let price = pricing[subs] - pricing[info.subscription];
         if (price <= 0) {
             await this.db.updateSubscription(id, info.subscription);
             dogstatsd.increment(`${USER_CHANGE_SUBS}.${info.subscription}`);
