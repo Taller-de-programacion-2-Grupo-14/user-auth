@@ -401,7 +401,7 @@ describe('controller.js tests', () => {
         let ok = true;
         let e = {status: 418};
         try {
-            await controller.HandleGetToken({param: jest.fn().mockReturnValueOnce('cositote')})
+            await controller.HandleGetToken({param: jest.fn().mockReturnValueOnce('cositote')});
         } catch (er) {
             e = er;
             ok = false;
@@ -412,7 +412,7 @@ describe('controller.js tests', () => {
 
     test('HandleGetToken delegates responsibility if ok', async () => {
         let jsonResponse = {};
-        let response = {'somethingUnique': 'reallyunique'}
+        let response = {'somethingUnique': 'reallyunique'};
         let res = {
             json: jest.fn((data) => {
                 jsonResponse.data = data;
@@ -429,7 +429,7 @@ describe('controller.js tests', () => {
         let ok = true;
         let e = {status: 418};
         try {
-            await controller.HandleUpgradeSubscription({body: {subscription: 'sarasa'}, decoded: {}})
+            await controller.HandleUpgradeSubscription({body: {subscription: 'sarasa'}, decoded: {}});
         } catch (er) {
             e = er;
             ok = false;

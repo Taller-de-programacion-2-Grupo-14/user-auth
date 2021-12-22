@@ -282,7 +282,7 @@ describe('services.js tests', () => {
     });
 
     test('if subscription is the same to upgrade then throws error', async () => {
-        let s = 'some subs'
+        let s = 'some subs';
         let mockDB = {GetUserInfo: jest.fn().mockReturnValueOnce({subscription: s})};
         let service = new UserService(mockDB, null);
         let e = {status: 418};
@@ -291,21 +291,21 @@ describe('services.js tests', () => {
             await service.UpgradeUser(3, s);
         } catch (er) {
             e = er;
-            ok = false
+            ok = false;
         }
         expect(e.status).toBe(400);
         expect(ok).toBeFalsy();
     });
 
     test('if downgrade then only downgrades', async () => {
-        const someResponse = 'some response'
+        const someResponse = 'some response';
         let mockDB = {
             updateSubscription: jest.fn(),
             SetWaiting: jest.fn(),
             GetUserInfo: jest.fn().mockReturnValueOnce({subscription: 'platinum'})
         };
-        let coursesClient = {sendNotification: jest.fn(() => Promise.resolve())}
-        let paymentsClient = {deposit: jest.fn().mockReturnValueOnce(someResponse)}
+        let coursesClient = {sendNotification: jest.fn(() => Promise.resolve())};
+        let paymentsClient = {deposit: jest.fn().mockReturnValueOnce(someResponse)};
         let service = new UserService(mockDB, null, paymentsClient, coursesClient);
         let res = await service.UpgradeUser(3, 'free');
         expect(res === someResponse).toBeFalsy();
@@ -314,14 +314,14 @@ describe('services.js tests', () => {
     });
 
     test('if upgrade then delegates the rest to deposit', async () => {
-        const someResponse = 'some response'
+        const someResponse = 'some response';
         let mockDB = {
             updateSubscription: jest.fn(),
             SetWaiting: jest.fn(),
             GetUserInfo: jest.fn().mockReturnValueOnce({subscription: 'free'})
         };
-        let coursesClient = {sendNotification: jest.fn(() => Promise.resolve())}
-        let paymentsClient = {deposit: jest.fn().mockReturnValueOnce(someResponse)}
+        let coursesClient = {sendNotification: jest.fn(() => Promise.resolve())};
+        let paymentsClient = {deposit: jest.fn().mockReturnValueOnce(someResponse)};
         let service = new UserService(mockDB, null, paymentsClient, coursesClient);
         let res = await service.UpgradeUser(3, 'platinum');
         expect(res === someResponse).toBeTruthy();
@@ -335,11 +335,11 @@ describe('services.js tests', () => {
             removeSubscription: jest.fn(() => Promise.resolve()),
             getSubs: jest.fn().mockReturnValueOnce({})
         };
-        let coursesClient = {sendNotification: jest.fn(() => Promise.resolve())}
+        let coursesClient = {sendNotification: jest.fn(() => Promise.resolve())};
         let service = new UserService(mockDB, null, null, coursesClient);
         await service.finishUpgrade(true, 'jsjfdahsj');
         expect(coursesClient.sendNotification).toBeCalledTimes(1);
-        expect(mockDB.updateSubscription).toBeCalled()
+        expect(mockDB.updateSubscription).toBeCalled();
     });
 
     test('finish upgrade do not update subscription if status is incorrect', async () => {
@@ -348,10 +348,10 @@ describe('services.js tests', () => {
             removeSubscription: jest.fn(() => Promise.resolve()),
             getSubs: jest.fn().mockReturnValueOnce({})
         };
-        let coursesClient = {sendNotification: jest.fn(() => Promise.resolve())}
+        let coursesClient = {sendNotification: jest.fn(() => Promise.resolve())};
         let service = new UserService(mockDB, null, null, coursesClient);
         await service.finishUpgrade(false, 'jsjfdahsj');
         expect(coursesClient.sendNotification).toBeCalledTimes(1);
-        expect(mockDB.updateSubscription).toBeCalledTimes(0)
+        expect(mockDB.updateSubscription).toBeCalledTimes(0);
     });
 });
