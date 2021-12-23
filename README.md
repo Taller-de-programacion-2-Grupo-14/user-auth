@@ -22,3 +22,5 @@ Se puede ejecutar el comando de make buildDC para compilar el codigo y luego cor
 ### email: email el cual la aplicacion va a enviar mails para recuperar contraseña
 ### pswd: password de dicho mail
 ### PAYMENTS_API: URL de donde se va a interactuar con la api de payments
+### secret: secreto de la aplicacion
+### algorithm: algoritmo de hasheo
