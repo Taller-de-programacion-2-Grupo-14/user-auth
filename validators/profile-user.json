@@ -26,7 +26,7 @@
       "type": "string",
       "description": "Location of the user"
     },
-    "photoURL": {
+    "photo_url": {
       "type": "string",
       "description": "Link to the profile picture of the user"
     }

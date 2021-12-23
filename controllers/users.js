@@ -86,7 +86,7 @@ class Users {
             firstName: req.body.first_name,
             lastName: req.body.last_name,
             interest: req.body.interest,
-            photoURL: req.body.photoURL
+            photoURL: req.body.photo_url
         };
         await this.service.ModifyUserInfo(values);
         const status = 200;
