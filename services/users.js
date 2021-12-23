@@ -177,8 +177,8 @@ class UserService {
         }
         let price = pricing[subs] - pricing[info.subscription];
         if (price <= 0) {
-            await this.db.updateSubscription(id, info.subscription);
-            dogstatsd.increment(`${USER_CHANGE_SUBS}.${info.subscription}`);
+            await this.db.updateSubscription(id, subs);
+            dogstatsd.increment(`${USER_CHANGE_SUBS}.${subs}`);
             this.courses.sendNotification({
                 title: 'Modificacion exitosa',
                 body: 'tu nueva subscripcion fue agregada correctamente'
