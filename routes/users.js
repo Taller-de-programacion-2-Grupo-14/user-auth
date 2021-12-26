@@ -49,11 +49,12 @@ function errorHandler(err, req, res) {
     res.json(errBody);
 }
 
+let initializedLogger = new logger(tracer);
 let db = new persistence(client);
 /* GET users listing. */
 let paymentsClient = new payments();
 let userService = new UserService(db, transporter, paymentsClient, new courses());
-let usersContainer = new Users(userService, new logger(tracer), paymentsClient);
+let usersContainer = new Users(userService, initializedLogger, paymentsClient);
 let firebase = new Firebase(db);
 router.post('/', validateSchema('new-user'), async (...args) => {
     await doRequest(args, async(...args) => await usersContainer.HandleUserPost(...args));
@@ -68,7 +69,7 @@ async function doRequest(args, method) {
     try {
         await method(...args);
     } catch (e) {
-        console.log(e);
+        initializedLogger.log('error', e);
         errorHandler(e, ...args);
     }
 }

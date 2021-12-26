@@ -32,7 +32,7 @@ class Payments {
         let res = await fetch(`${this.host}/deposit`, data);
         if (res.status > 299 || !res.ok) {
             let e = new Error(res.message);
-            e.status = res.statusCode;
+            e.status = res.status;
             throw e;
         }
         return res.json();
